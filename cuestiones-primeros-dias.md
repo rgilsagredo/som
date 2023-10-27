@@ -1,7 +1,14 @@
 # Dudas para organización
 ## ¿Qué software tenemos?
+En general, Windows 10 casi todos; 8GB de RAM, espacio en disco en
+principio de sobra
+
 ## ¿Qué permisos tenemos?
+Ninguno. Pero en principio tenemos todas las aplicaciones que necesitamos.
+
 ## ¿Tenemos máquinas virtuales?
+Oracle VM VirtualBox
+
 ## Comunicación con los alumnos
 Idealmente, usamos de manera exclusiva el repo de GitHub, aunque para entrega
 de ejercicios seguramente sea mejor otra plataforma. Si no, averiguar bien cómo
@@ -21,12 +28,15 @@ con rúbrica, que será presentada a posteriori de la entrega.
 Los contenidos del examen incluirán conceptos teóricos explicados en clase
 y cuestiones relacionadas con los ejecicios hechos en clase y con la práctica.
 
-### ¿Fecha de la primera evaluación?
-Supongo que es en poco tiempo
+### Distribución de la nota
+PDTE
 
-## Recuperaciones
-¿Cómo lo hacen en el centro? Enterarse. Seguramente sea ir a la
-ordinaria y a la extraordinaria.
+### Recuperaciones
+No se hacen, se va a la extraordinaria con el/los trimestre(s) suspensos
+
+### ¿Fecha de la primera evaluación?
+En principio, se plantea dejar la primera evaluación para después del
+puente de diciembre. Si no, sería en la última semana de noviembre
 
 ## Método docente
 Contar brevemente teoría, hacer algún ejercicio práctico con los alumnos, 
@@ -37,7 +47,9 @@ Si el alumnado ya ha estado mirando cosas por su cuenta (hay mil recursos
 online), quizás podamos empezar algo avanzados. Por la fecha de inicio del 
 curso es imposible dar todo el temario. Si es posible, tras terminar el curso
 se seguirá actualizando el repositorio añadiendo contenidos extra que no se
-hayan podido ver en clase
+hayan podido ver en clase.
+
+UPDATE: no han visto nada, no saben nada
 
 ## ¿Qué software necesito instalarme?
-Habrá que averiguar qué permisos tengo, si me dan equipo o es compartido...
+En ppio no hace falta nada
