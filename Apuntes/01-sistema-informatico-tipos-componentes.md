@@ -22,7 +22,7 @@ Las que usan el sistema informático
 
 ### Funcionamiento
 La idea de funcionamiento de un SI es:<br/>
-![funcionamiento SI](/Apuntes/images/funcionamiento-SI.png "Funcionamiento SI")
+![funcionamiento SI](./images/funcionamiento-SI.png "Funcionamiento SI")
 
 (Pensar en un videojuego: le metes input por M&K o Controller, el juego lo 
 recibe, y te muestra la salida por la pantalla).
