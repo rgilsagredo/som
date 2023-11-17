@@ -144,3 +144,91 @@ Generará en el host destno un VDI con el estado último
 - Copiar el dir donde esté la VM al host destino y "añadir" una nueva VM
 usando el ficheor `.vbox`. Puede dar problemas si todo lo que necesitamos
 no está en el directorio
+
+### Ejemplicios
+Vamos a usar un Windows 11 que será lo más familiar para probar a ahcer cosas.
+Necesitamos la ISO: https://www.microsoft.com/software-download/windows11
+
+Abrimos el programa, pulsamos en new, vamos a "expert mode". 
+Hay que darle un nombre significativo, que refleje el OS que se va a instalar y 
+la funcion. Por ejemplo, Windows11x64_test. Elegimos una carpeta de destino
+para la VM, vamos a crear una carpeta en D para almacenar nuestras VMs.
+
+Seleccionamos la ISO. Eso debería detectar automaticamente tipo y versión
+del OS; para cosas raras hay que hacer más trabajo.
+
+De momento vamos a hacer unattended install; no pulsamos el tick.
+Tenemos que elegir un usuario, un password, nombre para el sistema
+(el resto de momento no lo vemos)
+
+Seleccionamos el hardware que queremos: RAM y procesadores. La RAM que 
+seleccionemos se le quita al host, así que no podemos darle toda (aunque 
+luego podemos cambair el settings. Hay que darle lo básico para que arranque,
+si necesitamos una mejor eprformance a posteriore, veremos qué se puede hacer).
+
+Los procesadores, no "se roban" del host pero sí, es recomnedable no dar más de
+la mitad.
+
+Para el almacenamiento, seleccionamos cuánto queremos darle (normalmente en
+las install x defecto te dice el mínimo recomendado). Luego el tipo; en general
+vdi es el mejor formato que es el nativo de VirtualBox, pero se pueden elegir
+otros formatos si pretendes exportar la VM a otras herramientas de 
+virtualización. En geeral, no interesa hacer el "pre allocate full size", ya que
+nos "roba" del host todo ese espacio; si lo dejmos en dynamic, el disco virtual
+irá creciedno de verdad según necesidades.
+
+Terminados, le dejamos que inicie la máquina.
+
+#### Intall guest addtions
+esto hace nuestra vida más fácil. Para instalarlo en un guest Windows,
+vamos, en la pantalla de VirtualBox, a "devices", "insert guest additions CD
+image". Eso debería lanzar solo el installer. Si hubiese que actualizarlos,
+es el mismo proceso
+
+#### Shared folders
+Con los guest additons podemos crear carpetas compartidas entre host y guest.
+Tenemos que crear una carpeta en el host. Vamos a la m´´auiqna, devices,
+shared folders, settings, y ahí podemos especificar una shared. Hay 2 tipos,
+las permanentes y las transitiend (las transitiens "desaparacen" del guest 
+en reboot). También puedes hacerlas read-only.
+
+Puedes pedir que se monten solas, o hacerlo manual. En Windows, para
+qye la encuentre hay que escribir:
+```
+net use X: \\vboxsvr\foler-name
+```
+
+donde X es la letra de disco que le asignas
+
+#### Drag & Drop
+En ppio solo para Windows guest y hosts; se activa en devices
+
+#### Cuando cierras la VM
+Tienes 3 opciones: save machine state: es como que se congela, y cuando
+la reinicie está en le mismo estado. send sutdown signal, es como decir que
+se apague. poweroof the machine, es como quitar la fuente de alimentación
+
+#### Grupos
+puedes agrupar las VMs para gestionarlas colectivamente. Es fácil, drag & drop
+en la interfaz de VirtualBox
+
+#### Details
+Ver los detalles, aon bastante autoexplicativos
+
+#### Snapshots
+consiste en sacar una foto a la VM en un momento dado al que puedo volver
+más adelante (sobre todo si vamos a hacer algo que pueda ser una cagada).
+
+podemos guardar mucho, se les da nombre y descripcion. Podemos verlos en la
+interfaz. Si sleccionas varias, los ves todos. Podemos hacer varias cosas con 
+los snapshots: borrar, restaurar, clonar (basados en el snapshot), hacer
+cambios de configuración... Ojo que los snapshots se comen espacio.
+
+Los snapshots contienen una copia de los settings, si restauras, se vuelve a esa
+config. El estado de los discos duros attached también, se perderán datos
+
+#### Move & Remove
+podemos eliminar y recolocar en el host la VM. Solo posible cuando la máquina
+está parada.
+
+#### Cloning
