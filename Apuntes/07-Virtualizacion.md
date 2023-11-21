@@ -206,7 +206,7 @@ En ppio solo para Windows guest y hosts; se activa en devices
 #### Cuando cierras la VM
 Tienes 3 opciones: save machine state: es como que se congela, y cuando
 la reinicie está en le mismo estado. send sutdown signal, es como decir que
-se apague. poweroof the machine, es como quitar la fuente de alimentación
+se apague. poweroff the machine, es como quitar la fuente de alimentación
 
 #### Grupos
 puedes agrupar las VMs para gestionarlas colectivamente. Es fácil, drag & drop
@@ -231,4 +231,99 @@ config. El estado de los discos duros attached también, se perderán datos
 podemos eliminar y recolocar en el host la VM. Solo posible cuando la máquina
 está parada.
 
+
+
+#### Añadir volumen a un disco
+Puede ocurrir que en un momento dado necesitemos aumentar el espacio
+de disco asignado a una m'auina. Para ello, con la máuina apagada, vamos a
+la tools, hard disks, seleccionamos el que queremos ampliar, y le damos
+más espacio. Iniciamos la VM, vamos al admin de discos y veremos que 
+tenemos espacio libre no asignado. Con botón derecho podemos amplicar la 
+partición. OJO: VirtualBox solo te permite aumentar el tamaño, nunca reducir.
+Puedes reducir liberando espacio de una partición, pero es un apaño, aunque
+puede resultar útil si no quieres que el disco crezca indefinidamente.
+
+#### Añadir un nuevo disco virtual
+Vamos a la máquina, settings, storage, SATA, añadimos hard disk y seguimos 
+el asistente. Luego tenemos que formatearlo en la VM. Para eliminarlo, en los
+mismos settings, remove attachment, y es como quitarlo.
+
+#### Añadir/quitar RAM y procesadores
+en los settings de la máquina, en system
+
+#### Crear plantillas de máquinas
+Puede ser que necesites muchas máquinas iguales (para simular una red local,
+por ejemplo). Para no repetir 100 veces una instalación, podemos clonar una 
+máquina y con eso lo tendríamos. Pero tiene el problema de que crea un nuevo
+disco virtual, con su consumo de espacio correspondiente. Podemos hacer 
+otro apaño, si no vamos a quedarnos cortos de espacio, que es poner el
+disco de la máquina "plantilla" en modo multi-attach. Para ello, vamos a tools,
+selecionamos el disco y le cambiamos de normal a multi attach. Luego clonamos
+la VM, y en discos, le quitamos el disco clonado y le ponemos el disco multi
+attach; de esta manera tenemos 2 máquina iguales pero que son diferentes, es 
+decir, podemos cambiar cosas en una sin que la otra se vea afectada.
+Ojo que esto puede dar problemas a la hora de exportar (los clones) pues su
+vdi no está en su carpeta. Lo correcto sería eliminar el vdi del clon.
+
+Con esto podemos también jugar a agrupar máquinas y ver cómo encenderlas
+todas de una etc
+
 #### Cloning
+Clonar una máquina virtual significa crear una copia exacta de una máquina 
+virtual existente. Esta copia, conocida como "clon," es una duplicación completa
+de la configuración y el estado de la máquina virtual original. El propósito 
+principal de clonar una máquina virtual 
+es crear instancias adicionales que sean idénticas a la original, lo que puede 
+ser útil en diversos escenarios, como la implementación de entornos de prueba, 
+desarrollo, o cuando necesitas varias 
+máquinas virtuales con la misma configuración.
+
+Para clonar, seguimos el asistente de clonación, no tiene mucho misterio.
+Quizás mencionar que puedes elegir linkear el disco al clonar, lo cual hace que 
+el clon no tenga disco propio, y sea compartido con la máquina. 
+
+#### Exportar/importar (backups)
+Seleccionamos la máquina, exportar, y formato ova.
+Nos llevamos ese ova a un nuevo host, y en virtualbox --> file --> import
+appliance selecionamos el ova.
+
+También podemos copiar la carpeta donde está la VM; ojo que este método puede
+dar "problemas", en el sentido de que si nos llevamos una máquina cuyo disco es
+compartido, también tenemos que copiar ese disco. Una vez en el host, creamos
+una nueva máquina y que apunte al disco copiado
+
+#### Rendimiento
+Es importante que las VMs vayan bien, para ello tenemos que saber leer cuándo
+se les pide demasiado y entender cuales pueden ser los problemas y posibles
+soluciones. Hay varias cosas a tener en cuenta:
+
+##### Uso de CPU
+De momento solo estamos con una máquina W11, para ver el uso de CPU podemos
+meternos al admin de tareas (ctrl+shift+esc) y ver que el uso de CPU no está
+siempre cerca del 100%. Si lo estuviera, hayq ue averiguar qué procesos se stán
+comiendo la CPU. Si queremos alguna mejora, quizás hay que dar más procesadores 
+a la VM. Igualmente tenemos un monitor en el propio VirtuaBox que nos dice
+cuanta carga tiene la CPU del guest.
+
+Paraver que las cosas funcionan, vamos a usar el programa Prime95; lo descargas
+e instalas en la VM (es fácil), y jugamos a putear un poco a la VM para ver 
+cómo responden las mñétricas
+
+##### Uso de RAM
+lo podemos ver en performance del task manager. En procesos, podemos averiguar 
+qu'e se est'a comiendo la memoria. PDTE ver qué es la swap en windows, algo así
+como paged, pero no me queda claro pq no lo hace igual que linux
+
+##### Espacio en disco
+hay que monitorizar el espacio total y el dispoinble en discos, así
+como el I/O del disco. Se puede ver en el task manager y en virtualbox.
+
+Falta de espacio puede hacer que baje el rendimiento en apps y tener
+bottlenecks en almacenaminto.
+
+podemos ver cómo cambia esto haciendo un txt "grande"
+
+#### Cosas de red
+PDTE
+
+#### arranque?
