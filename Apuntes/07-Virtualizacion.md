@@ -324,6 +324,23 @@ bottlenecks en almacenaminto.
 podemos ver cómo cambia esto haciendo un txt "grande"
 
 #### Cosas de red
-PDTE
+En la máquina tenemos podemos poner hasta 4 tarjetas de red diferentes
+configuradas diferente.
+
+La config por defecto es NAT, que crea una red con conexión a internet 
+para la VM pero está incomunicada del resto de VMs e incluso del host
+(de manera entrante).
+Podemos comprobar eso desde la VM haciendo ping a goolge, pero vemos que desde
+host no hay manera de hacer ping a la VM
+
+Adaptador puenter es como añadir la VM a la red local. Podemos comprobar
+ahora que ambas maquinas estan en la misma subred y que podemos pingear
+ambas (hay que descativar firewalls). La VM tiene accesoa  internet
+
+adaptador host only crea una minired paa host y guest. El guest no tiene 
+concexión a internet
+
+red nat es como nat, pero para hacer una red de VMs que puedan hablar entre sí.
+Para ello, primero tenemos qe crear una red (file--> tols --> network)
 
 #### arranque?
