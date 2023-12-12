@@ -70,7 +70,7 @@ Las particiones que no empiezan en esos sectores se llaman no alineadas.
 Se basa en la existencia de un MBR (Master Boot Record), que es que 
 un primer sector del disco tiene la metainfo del particionado:
 
-![MBR](./images/particiones/windows/MBR.png "MBR")
+![MBR](./images/particiones/MBR.png "MBR")
 
 - Los primeors 446 bytes tienen un código de arranque
 - los siguientes tienen una tabla de particiones del disco
@@ -81,7 +81,7 @@ defina las particiones del disco. Cada aprticion se defie con 16B, por tanto,
 en ppio solo puedo tener 4 particiones. Para cada partición se almacena
 la siguiente info:
 
-![tabla-particiones](./images/particiones/windows/tabla-particiones.png "tabla-particiones")
+![tabla-particiones](./images/particiones/tabla-particiones.png "tabla-particiones")
 
 Notas: solo puede existir una partición como activa y su valor del byte de 
 activa será de 0x80, el resto 0x0. Se usa un direccionamiento de bloque lógico
@@ -93,7 +93,7 @@ posible a almacenar. Se llama partición primaria a la que tiene info en
 la tbla de particiones. 
 
 En este ejemplo:
-![part-DOS](./images/particiones/windows/particion-DOS.png "part-DOS")
+![part-DOS](./images/particiones/particion-DOS.png "part-DOS")
 
 se muestra como queda un particionado con 3 particiones primarias.
 El espacio entre MBR y la primera partición es porque hay alineamiento, entonces
@@ -106,7 +106,7 @@ las particiones extendidas, que son particiones primarias para contener más
 particiones. Las particiones que están en una extendida se laman lógicas.
 Solo puedes tener una partición primaria extendida.
 
-![DOS-extendida](./images/particiones/windows/particion-DOS-extendida.png "DOS-extendida")
+![DOS-extendida](./images/particiones/particion-DOS-extendida.png "DOS-extendida")
 
 La partición primaria que va a ser la extendida se marca con 0x05; el primer
 sector de una extendida se llama EBR (Entended Boot Record) y es igual que un
