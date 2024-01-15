@@ -385,3 +385,212 @@ normalmente es de 1MiB, empezará en el sector 2048
 ![tabla-particiones-GPT](./images/particiones/tabla-particiones-GUID.png "tabla-particiones-GPT")
 
 ![particiones-GUID](./images/particiones/disco-con-particiones-GUID.png "particiones-GUID")
+
+
+
+## Arranque del sistema
+Cuando das la señal de arranque (pulsar el botón de encender), el primer
+software que se carga es el firmware de la placa base. Hace 4 cosas:
+
+- Iniciar el proceso POST (Power-On Self-Test), que analiza el hardware
+    del equipo y, si detecta algún problema, para el arranque y suele emitir
+    un pitido. Este POST solo ocurre en un arranque n frío (cuando el ordenador
+    estaba apagado). Un arranque en caliente es cuando se reinicia un ordenador.
+
+- Proporciona la gestión básica de I/O (al menos poder usar el teclado y monitor)
+
+- Permitir una reconfiguración del propio firmware (lo más habitual, cambiar el 
+    bootloader -  el programa que cargará al OS)
+
+- Cargar el siguiente software, al que se cede el control. normalmente, el 
+    kernel de un OS 
+
+Hay 2 arranques, BIOS (Basic Input Output System, el antiguo) y 
+UEFI (Unified Extensible Firmware Interface), el más actual y que acabará por 
+imponerse.
+
+En ppio no existe compatibilidad entre ambos aranques, pero algunos equipos con
+UEFI tienen un modo `legacy` que permite a la placa base buscar un bootloader
+para BIOS o un bootloader para UEFI. Es normal tener el modo legacy y el "normal"
+a la vez.
+
+Independientemente del uso de BIOS o UEFI, en el arranque tenemos estas fases:
+- POST - comprobación del hardware. Dentro de este proceso, se puede tocar una
+    tecla que pausa el proceso para:
+    - Entrar en la BIOS (reconfigurar el firmware)
+    - Presentar un menú para selección de qué programa o dispositivo se desea 
+        arrancar. Las cosas que aparecen en ese menú son los items de la
+        `secuencia de arranque`
+
+- Arranque de algún programa siguiendo la ``secuencia de arranque``, que es 
+    un listado de todos los dispositivos detectados en busca de un programa
+    de arranque válido. En cuanto se encuentra, el firmware cede el control.
+
+### Bootloader
+La idea del firmware es buscar algo que en última instancia cargue un OS a RAM.
+Técnicamente un bootloader es cualquier cosa que se cargue antes que un OS.
+Pero los boootloader pueden hacer distintas cosas:
+- Algunos es simplemente cargar el OS a RAM y cederle el control (por ejemplo
+    EFIStub, el bootloader para arranque EFI que vene con el kernel de linux)
+
+- otros hacen una función concreta, pero no cargan un OS a RAM. Por ejemplo,
+    `memtest` comprueba la integridad de la RAM
+
+- Otros bootloaders lo que hacen es cargar otros bootloaders. En particular
+    destaca el ``bootmanager``, cuyo objetivo es permitir seleccionar
+    entre distintos `bootloaders`
+
+
+### BIOS
+Lo que intentará un arranque con BIOS es cargar el código de arranque que
+hay en el MRB. Para ello, va dispositivo por dispositivo hasta que encuentra
+un código de arranque válido. Este firmware lo único que sabe hacer es leer
+el priemr sector de los dispositivos.
+
+No es un bootmanager, las únicas cosas que ve son los potenciales bootloaders.
+En particular, 2 OS en 2 dispositivos diferentes, podemos escoger entre ambos;
+pero 2 OS en un mismo dispositivo no. Habría que instalar un bootmanager como
+GRUB para poder hacer eso.
+
+Con firmware BIOS, el particionado suele ser DOS, pero no es obligatorio. 
+Para conseguir un dispositivo
+arrancable co firmware BIOS necesitas:
+
+- un MBR
+- un bootmanager en el MBR (GRUB o Windows Boot Manager) (o un bootloader)
+
+Cosa: cada vez que instalas un OS el programa que instala sobreescribe el MBR
+del dispositivo co el bootloader/manager del nuevo OS; el nuevo
+gestor debería incluir en sus entradas los antiguos OS que pudiera habr en
+el disco; pero no siempr ees así. Por ejemplo, el Windows Boot Manager
+solo se preocupa de de Windows. Si se van a instalar en un mismo disco varios
+OS, el orden que da menos trabajo para poder acceder a todos es: primero los
+Windows, de más antiguo a más moderno, y luego los Linux
+    
+### UEFI
+UEFI sí entiende particiones GPT y FS FAT (y CDFS en discos), y tiene un
+bootmanager incluido (aunque se suele instalar otro). El bootmanager puede
+almacenar en NVRAM items ordenados de arranque, que tienen un nombre
+(el del OS que van a arrancar, habitualemnte), y hace referencia a una
+ruta de un fichero en alguna partición GUID de algún dispositivo, y ese
+fichero lo que tiene que ser es un bootloader (la partición debe tener
+un FS comprensible para el firmware).
+
+Es decir, para arrancar un OS solo necesitas una partición para almacenar
+el bootloader y que el bootmanager del firmware sepa de su existencia.
+
+Como, a diferencia de la BIOS, las entradas del bootmanager son cargadores
+(y no dispositivos), se puede tener en un mismo dispositivo varios
+bootloaders sin necsidad de instalar un bootmanager como GRUB.
+
+Si en las entradas del boootmanager hay dispositivos (en vez de bootloaders),
+lo que hace realmente eso es buscar un boootloader en una ruta predefinida
+en el dispoitivo.
+
+Además de las entradas que haya en NVRAM, en la fase POST que se detctan 
+dispositivos se añaden entradas para poder arrancar desde un USB por ejemplo.
+
+Puedes poner los bootloaders donde te de la gana, pero se suele seguir unas
+reglas: en particionado GPT de un disco se crea una partición de FS FAT32 y tipo
+ESP (EFI System Partition); en esa partición se crea una estructura de directorios
+como esta:
+
+![directorio-particion-EFI](./images/arranque/directorio-particion-EFI.png "directorio-particion-EFI")
+
+Cada OS crea un directorio dentro de /EFI con lo básico para arrancar el OS
+o comenzar el arranque.
+
+Gracias a esta estructura, los arranques de los OSs no interfieren entre sí.
+Normalmente con 100MiB para est partición vale.
+
+Aunque al instalar un OS, es normal que se auto de preferencia en las entradas
+de la secuencia de arranque. Puede que el OS sea "respetuoso" con otros
+OSs que hubiese (es decir, al arrancar nos planta un bootmanager) o puede que no
+(como hará Windows Boot Manager); en cualquier caso pulsado la tecla
+adecuada entraremos al bootmanager del firmware y podremos arrancar el OS que 
+queramos.
+
+También se puede reordenar la secuencia de arranque (con algún método gráfico
+en la config del firmware; con alguna shell del propio firmware [habrá que saberse 
+los comandos], o desde el propio OS [Linux te da efibootmgr]).
+
+En los dispositivos extraibles, que el POST detecta y se añaden dinámicamente
+a las entradas del bootmanager del UEFI, el EFI intenta cargar siempre lo mismo:
+la primera partici´que sepa leer y dentro de esa partición el fichero
+`/EFI/Boot/bootx64.efi`. Si lo encuentra, el dispositivo arranca.
+
+Esto es o que ocurre cuando instalas el primer OS en un ordenador virgen en 
+el que ningún instalkador ha toqueteado la NVRAM.
+
+Véase que esa ruta también está en el arbol de directorios de la partición
+ESP; ahí lo que habrá normalmente es la secuencia de arranque del último OS
+instalado; si la entrada del bootmanager se refiere al dispositivo (al disco)
+y no a un bootloader concreto; se arranca el OS que esté en esa carpeta
+
+### GRUB: un bootmanager
+GRUB (GRand Unified Bootloader), se carga en 3 fases.
+La primera, se corresponde con el fichero `boot.img`, que es el código
+que se planta en el MBR (446 bytes). Solo pretende cargar la siguiente fase.
+
+La fase 2 (o 1.5 a veces) es el fichero `core.img`, de tamaño 32KiB. Solo carga
+la fase 3 (a veces fase 2)
+
+La fase 2 son módulos que están en `/boot/grub` y son ficheros en un FS. Estos
+presentan al usuario el menú de inicio de GRUB, y el usuario elige qué kernel
+cargar.
+
+Si el arranque es UEFI, no hace falta partir en boot y core, y el fichero
+`grubx64.efi` hace el trabajo de ambos.
+
+Si se van a instalar varios OSs conviene reservar una partición pequeña (32MiB)
+para `/boot/grub`. Eso independiza GRUB de Linux (u otros OSs) y podemos 
+elminar linux sin perder GRUB.
+
+#### Particiones DOS y arranque BIOS
+boot.img siempre irá en el MBR y core.img  irá entre el MBR y la
+primera partición:
+
+![GRUB-particion-DOS](./images/arranque/grub-particion-DOS.png "GRUB-particion-DOS")
+
+Este sería un particionado ara multiboot con GRUB:
+
+![multiboot-DOS](./images/arranque/multiboot-DOS.png "multiboot-DOS")
+
+#### Particiones GPT arranque UEFI
+El fichero `grubx64.efi` (que sustituye a `core.img`) se guarda en la partición
+ESP, y el resto del gestor en la partición para `/boot/grub`. Un posible 
+particionado es:
+
+![multiboot-GPT](./images/arranque/multiboot-GPT.png "multiboot-GPT")
+
+#### Partición GPT arranque BIOS
+`boot.img` irá en el MBR del disco, pero el `core.img` no debe ir
+en el espacio post MBR porque la tabla GPT en ppio puede crecer.
+Se necesita una partición propia para `core.img`, con el nombre de
+BIOS Boot Partition. Esa partición se suele forzar a alineación 4KiB
+y que vaya antes de la primera partición alineada a 1MiB.
+
+Un posible particionado:
+
+![multiboot-GPT_BIOS](./images/arranque/multiboot-GPT-BIOS.png "multiboot-GPT_BIOS")
+
+
+#### Arranque híbrido
+Si quieres preparar el sistema para un paso de arranque BIOS a UEFI y que no
+duela mucho, puedes hacer lo siguiente: poner las 2 particiones de arranque,
+la BIOS Boot Partition y la ESP:
+
+![multiboot-GPT-hybrid](./images/arranque/multiboot-GPT-BIOS-UEFI.png "multiboot-GPT-hybrid")
+
+
+## PDTE
+arranque Windows:
+https://gitlab.com/aberlanas/ASIR-ISO/-/blob/master/UD03_Instalacion_Arranque/Teoria_10_Win_GestoresDeArranque.md?ref_type=heads
+
+arranque linux:
+https://gitlab.com/aberlanas/ASIR-ISO/-/blob/master/UD03_Instalacion_Arranque/Teoria_20_Linux_GestoresDeArranque.md?ref_type=heads
+
+ver si estoy en UEFI/BIOS:
+https://gitlab.com/aberlanas/ASIR-ISO/-/blob/master/UD03_Instalacion_Arranque/Teoria_09_BIOS_UEFI.md?ref_type=heads
+
+tema hibernacion: https://sio2sio2.github.io/doc-linux/05.discos/99.instalacion/index.html#equation-ram

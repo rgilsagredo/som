@@ -158,6 +158,7 @@ espacio disponible en el disco (ver cómo hacer eso invocando `sgdisk --help`)
 Tras crear la particón "CINCO", borrarla (de nuevo, buscar el comando con
 help).
 
+
 Cambiar, en la tabla GPT, las entradas de las particiones "DOS" y "TRES"
 (buscar la opción correct con --help)
 
