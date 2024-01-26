@@ -582,15 +582,115 @@ la BIOS Boot Partition y la ESP:
 
 ![multiboot-GPT-hybrid](./images/arranque/multiboot-GPT-BIOS-UEFI.png "multiboot-GPT-hybrid")
 
+## hibernar y suspender
+Son "alternativas" a apagar el equipo. Su propósito es el mismo: conservar
+el estado en el que estaba el OS (a diferencia de un apagado, que cierra
+todos los procesos). Es decir, es una manera de poder dejar trabajo a medias y
+no perderlo.
 
-## PDTE
-arranque Windows:
-https://gitlab.com/aberlanas/ASIR-ISO/-/blob/master/UD03_Instalacion_Arranque/Teoria_10_Win_GestoresDeArranque.md?ref_type=heads
+En supensión, el equipo solo consume la energía que neceista para mantener la 
+RAM activa, y ahí es dodne se almacena el estado del sistema. Obviamente
+es mucho más rápido el arranque si ya está todo el RAM que desde un encendido.
 
-arranque linux:
-https://gitlab.com/aberlanas/ASIR-ISO/-/blob/master/UD03_Instalacion_Arranque/Teoria_20_Linux_GestoresDeArranque.md?ref_type=heads
+En hibernación, es lo mismo pero se lamacea en disco duro, así que realmente
+on se gasta energía casi. Es más rápido que un encendido pero más
+lento que una suspensión.
 
-ver si estoy en UEFI/BIOS:
-https://gitlab.com/aberlanas/ASIR-ISO/-/blob/master/UD03_Instalacion_Arranque/Teoria_09_BIOS_UEFI.md?ref_type=heads
+En sistemas de Kernel Linux, que te animan a crear una partición para
+swap, esta partición depede de la RAM del equipo. Si no se prentende
+hibernar, la fórmula para estimar cuanta swap necesito es:
 
-tema hibernacion: https://sio2sio2.github.io/doc-linux/05.discos/99.instalacion/index.html#equation-ram
+- 2*RAM GiB si mi RAM es menos de 1 GiB
+- 2 GiB de RAM si mi RAM es entre 1 y 4 GiB
+- del orden de la raiz cuadrada de la RAM si mi RAM es mas de 4GiB
+
+Si se preveé que el equipo pueda hibernar, entonces la fórmula rtecomendada
+para la swap es la misma que arriba, pero le sumammos el tamaño de la RAM.
+Es decir, siu tenemos de 1GiB de RAM, deberíamos tener un tamaño
+de swap de 1GiB + 2*1GiB = 3GiB de swap, etc
+
+
+## Proceso de arranque Windows
+Para el arranque Windows usa un fchero readonly que se llama BOOTMGR y es un
+boot manager. Se gura en la carpea raiz del sistema, en la partición system 
+reserved.
+
+BOOTMGR invoca a Winload.exe, que es el bootloader de OS. Winload.exe
+carga los drivers esenciales (con BOOT_START) y el kernel del OS (ntoskrnl.exe)
+
+Si hubiese una imagen de hibernación, BOOTMGR invoca a Winresume.exe, y es
+este programa quien carga a RAM el sistema.
+
+LOs pasos de arranque son:
+POST --> encontrar un disco booteable --> ese disco nos dice donde está
+BOOTMGR --> BOOTMGR nos permite elegir el OS (Windows) que queremos lanzar,
+si hubiera más de uno
+--> BOOTMGR cede el control a Winload.exe o Winresume.exe
+
+Si lo que s elanza es Winload (es decir, la máuina estaba apagada),
+éste lanza los drivers esenciales (drivers de disco y de bus -- BOOT_START)
+y pasa el control a ntoskrnl.exe, que carga el OS en RAM
+
+## Arranque Linux
+Linux no tiene un bootmanager propio, puede usar cualquiera, el que se incluye 
+en todas las versiones e GRUB. GRUB realmente permite cargar cualqueir
+OS, 
+pero suponiendo que elegimos que cargue un OS con kernel Linux, lo que se
+pasa al sistema es el fichero initramfs y el fichero vmlinuz. initramfs
+es el file system inical que se carga que permite al kernel (vmlinuz) tener
+acceso a drivers y herramientas básicas para poder arrancar el equipo 
+
+
+## arranque BIOS o UEFI
+
+### Windows
+Vamos a `C:\Windows\Panther`, buscamos `setupact.log` y lo abrimos, 
+y ahí buscamos `Detected boot Environment`, y eso dirá BIOS o UEFI
+
+## Linux
+si existen los directorios `/sys/firmware/efi` y `/boot/efi` es probalbe
+que el arranque sea UEFI; pero no necesariamente; si quieres estar segura
+el comando 
+
+```console
+sudo dmidecode -t system
+```
+
+te soluciona las dudas
+
+## puntos de restauración (solo Windows)
+Es una "partida guardada" que almacena configs, programas y datos por si algo
+se rompe, poder volver a ese punto.
+
+Ocupan espacio de disco, pero si es un equipo que va a necesitar una reisntalación
+habitualmente o estás jugando cn fuego y podrías cargarte algo,
+restaurar es más ´rapido y menos destructivo que reinstalar todo el OS
+
+Este proceso es compatible con hacer backups, y de hecho es recomendado;
+si se jode el disco duro, seguramente la restauración no funcione; ahí solo
+podremos recuperar nuestras cosas si teníamos un backup.
+
+Para crear un punto de restauración, buscamos "restore point", 
+habilitamos en config "system protection" y elegimos cuanto especio quremos 
+que se coma (para discos "grandes" y que nos están muy ocupados, lo
+recomendable es dejar entre 5 y 10% a los puntos de restauración)
+
+Le damos a crear y se crea.
+
+Tenemos que entrar a windows en modo seguro, que es un windows "básico"
+para detectar problemas y corregirlos.
+
+Pulsas la tecla de windows+I --> update & security --> recovery --> restart now
+
+Salta una pantalla azul, eliges troubleshoot --> advanced --> system restore
+
+## memtest86+
+memtest es un bootloader que no carga nada, solo checkea que la RAM del equipo
+esté bien (a nivel hardware).
+
+Es independiente del OS.
+
+Se suele meter en un USB y se configura al sistema para arrancar desde ahí.
+
+Para probarlo, podemos usar el dualboot pues se ha instalado el programa
+junto con Linux y en GRUB aparece la opción
