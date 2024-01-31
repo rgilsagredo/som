@@ -143,6 +143,156 @@ tienes varias opciones:
 - reboot -- reinicia el sistema
 
 ## Sistema de archivos
+Es quien se encarga de estructurar y gestionar la info almacenada en disco.
+Esa info se guarda en ficheros/archivos, que  a su vez se organizan en
+directorios/carpetas.
+
+Los ficheros son los que al final contienen algún tipo de información (una foto,
+un documento...), los directorios son ficheros que "almacenan" otros ficheros.
+
+Los archivos se organizan en modo árbol, con un directorio raiz (el origen),
+que se va ramificando.
+
+El disco lo que contiene son 0/1 (hay electricidad o no). El sistema de archivos
+(el file system) es el software que traduce esos 0/1 a cosas que podemos
+entender. Además les añade ciertos atributos (es decirr, no solo es información,
+si no que tengo metainformación), como puede ser propietario, permisos,
+fechas (creaión, modificacion...).
+
+Los FS más usados en kernel linux son ext4, brtfs y xfs. ext4 es el nativo
+(el que viene con) linux
+
+### Estructura
+Realmente cda distro de linux va a tener su propia estructura, pero todas más 
+o menos se parecen y siguen un estándar llamado FHS (Filesystem Hierarchy 
+Standard).
+
+Podemos ver la estructura de arbol de un FS con el comando 
+```console
+tree -dL 1 /
+```
+
+Si no tenemos instalado el programa tree, podemos instalarlo con 
+```console
+sudo apt install tree
+```
+
+Las opciones que estamos pasando al programa son -d -> solo muestra directorios
+y -L 1 -> baja solo 1 nivel respecto al directorio que te digo, que en este
+caso es el directorio raíz /
+
+![tree](./images/config-basica/tree.jpg "tree")
+
+Lo que vemos son los directorios bajo la raiz, y esos que apuntan son
+symlinks, enlaces simbólicos; eso es que se directorio realmente "no tiene
+nada", solo apunta a otro directorio (es un acceso directo).
+
+Hay que entnder qué contiene cada directorio, y algunos de sus subdirectorios:
+
+#### /bin
+de binarios; contiene programas básicos para el funcionamiento del sistema
+que pueden usar todos los usuarios
+
+#### /boot
+los archivos básicos para el arranque del sistema (gestor de arranque, 
+el kernel...)
+
+#### /dev
+contiene archivos de bloques y caractrers. Un archivo de caracteres gestiona
+el I/O secuencialemnte (tty "es" la consola, "null" es la "papelera"..).
+Los archivos de bloques gestionan el I/O en bloques o por lotes; los ejemplos
+son los dispositivos de almacenamiento sda, sdb, o sr0 (un CD). Son los
+ficheros que permiten el interactuar con el hardware.
+
+#### /etc
+fichero de configuración global de los programas del sistema. Luego, cada
+usuario puede tener sus ficheros de configuración específicos (personalizaciones)
+
+#### /lib
+de libraries o bibliotecas. Realmente son más progrtamas, pero son programas
+de apoyo/compartidos por otros programas que se alojan en /bin o /sbin o
+incluso las puede usar el kernel
+
+#### /media
+son los puntos de montaje (un punto de montaje es cómo voy a meterme a un
+filesystem concreto) de los dispositivos extraibles (CDs, USBs..)
+
+#### /mnt
+sirve para montar manualmente algún FS (poder acceder a ese filesystem)
+
+#### /opt
+optional, es para que se instale software que no viene con el OS. Suele
+copiar la jerarquíe de ficheros del software base, es decir, suele tener 
+una carpeta /bin, /lib... para que los programas puedan ir dejando
+los ficheros que van a nacesitar.
+
+#### /proc
+procesos; es el sitio que se reserva el OS para informarte de sus procesos
+y otras cosas; por ejemplo, la info sobre la CPU está ahí y podemos verla
+con 
+```console
+cat /proc/cpuinfo
+```
+también es interesante meminfo; información sobre la RAM
+
+La utilidad de proc es que es una interfaz de monitoreo del sistema,
+como pueda ser el administrador de tareas de windows.
+
+Los ficheros de /proc son virtuales, quiere decir que no existen físicamente
+en disco, si no que cuando quiero acceder a la info que tienen se generan
+en RAM y luego "desaparecen"
+
+#### /root
+es el "home" del usuario admin del sistema; es donde guarda sus cosas.
+En general lo que debería guardar ahí son ficheros de config, scripts,
+copias de seguridad, documentación sobre la admin, logs...
+
+#### /run
+contiene datso temporales y necesarios de procesos que se están ejecutando
+en el sistema (los procesos en segundo plano se llaman deamons)
+
+#### /sbin
+similar a bin, contiene programas básicos para hacer cosas, pero en este caso
+se trata de los programas básicos para administrar cosas del sistema; es
+decir, es lo que puede hacer root y otros superusuarios. Ejemplos: fdisk
+para particionados, ifconfig para cofiguraciones de red, mount/umonut
+para montajes de FS, reboot/poweroff para reinciar/apagar
+
+#### /srv
+served; si el equipo es un servidor, lo que sirve está aquí
+
+#### /sys
+simi lar a proc, otra manera de sacar datos del sistema. Más orientado al 
+hardware, miestras que /proc está más orientado a procesos
+
+#### /tmp
+temporal; para ficheros temporales. No pongas nada importante aquí porque
+seguramente se borrará
+
+#### /usr
+no es usuarios; es Unix System Resources, es decir, recursos que necesita el
+sistema. Si vemos la imagen de antes, ralmente es ahí donde se almacenan un
+montón de programas básicos
+
+#### /var
+variables, fichero que contienen datos que cambian normalmente miestras se
+ejecutan procesos (por ejemplo, una foto es un documento que no debería
+cambiar, no va aquí; los ficheros que componen una base de datos sí
+cambian habitualmente, o los logs del sistema, o info sobre estaos de
+procesos...)
+
+
+Es normal usar varios FS a la vez (ya hicimos eso en la instalación,
+creando varias particiones con sus FS para contener cosas). En los sistemas
+UNIX existe un único árbol de directorios, y al resto de FS se accede montándolos
+en algún directorio del árbol principal. Ejemplo: datos de usuario se montan
+en /home, los dispositivos extraibles en /media
+
+## hacer la comparativa con windows
+como se organoiza win, qué esperar en cada cosa
+
+### idea ejerccio
+crear usuarios, tocar la config de la consola y personalizarla
 
 ## Config de red
 
