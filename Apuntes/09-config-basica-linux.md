@@ -288,11 +288,58 @@ UNIX existe un único árbol de directorios, y al resto de FS se accede montánd
 en algún directorio del árbol principal. Ejemplo: datos de usuario se montan
 en /home, los dispositivos extraibles en /media
 
-## hacer la comparativa con windows
-como se organoiza win, qué esperar en cada cosa
 
-### idea ejerccio
-crear usuarios, tocar la config de la consola y personalizarla
+
+## paths
+Es muy normal que una orden (ejecutar un programa) requiera indicar
+uno o varios ficheros que estarán en algún lugar del arbol del FS.
+Para indicar sin errores a qué se quiere acceder, se utiliza
+su path
+
+### path absoluto
+consiste en indicar cómo llegar al fichero desde el directorio raiz /
+Ejemplo tonto: hay un programa (un fichero) que se llama `bc` que es una
+calculadora simple; está en /usr/bin; entonces la ruta absoluta a ese fichero
+es
+```console
+/usr/bin/bc
+```
+el simbolo `/` se usa para separar directorios
+
+### path relativo
+consite en saber llegar hasta el fichero desde mi `pwd` (puedo estar trabajando
+en cualquier directorio). Para indicar cómo llegar desde mi directorio hasta
+otro, tengo que conocer el "camimo" de cómo llegar, que seguramente implique 
+subir y bajr directorios. Para ello tenemos reservados los caracteres `.`,
+que se refiere al directorio en el que estoy actualmente (pwd), y el
+caratcer `..`, que se refiere al directorio padre.
+
+Si por ejemplo esoty en `~` (/home/mi-nombre-de-usuario), y quiero
+llegar de manera relativa al fichero `bc`, la manera de indicarlo es
+```console
+cd ./../../usr/bin
+```
+
+que se traduce a: desde aquí, sube un directorio, luego sube otro (y estoy
+en `/`, y desde ahí bajo a usr/bin)
+
+## nombres de fichero
+en ppio puedes llamar a tus ficheros como quieras (hay alguna limitación
+pero son ridículas); pero los nombres de los ficheros tienen 2 partes:
+nombre y extensión.
+
+Por ejemplo, un fichero con apuntes en formato txt se llamará `apuntes.txt`,
+un fichero de una clase de java que implementa un usuario se llamara 
+`Usuario.java`.
+
+Importante: es el tipo de archivo quien determina la extensión. Si tienes
+el archivo `apuntes.txt` y lo renombras a `apuntes.pdf`, el archivo no
+se transforma mágicamente a formato pdf, siEgue siendo un fichero de texto plano.
+
+Cosas: en los OS windows los ficheros ejecutables suelen tener extensión
+`.exe`; en los UNIX no, vendrán sin ninguna extensión, pues se marcan
+como ejecutables dándoles el permiso de ser ejecutables
+
 
 ## Config de red
 
