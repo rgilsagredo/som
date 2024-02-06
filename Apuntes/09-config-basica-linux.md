@@ -340,6 +340,176 @@ Cosas: en los OS windows los ficheros ejecutables suelen tener extensión
 `.exe`; en los UNIX no, vendrán sin ninguna extensión, pues se marcan
 como ejecutables dándoles el permiso de ser ejecutables
 
+## Comandos útiles pra sacar info
+
+### pwd
+print working directory -- nos devuelve la ruta absoluta al directorio en
+el que nos encontramos actualmente.
+
+### ls
+list, nos dice el contenido de un directorio.
+
+Entre las muchas opciones que puede llevar, suele ser últil la opción
+`-l`, que devuelve información sobre el directorio o fichero:
+
+![ls-l](./images/config-basica/lsl.jpg "ls-l")
+
+La info que s emuestra ahí es la siguiente:
+el primer carácter es el tipo de fichero, siendo estos lo posibles tipos:
+
+![tipos-fichero](./images/config-basica/tipos-fichero.jpg "tipos-fichero")
+
+los siguientes 9 caracteres, que van de 3 en 3, son los permisos en
+formato UGO (User Group Others); los permisos son de write, read, execute.
+
+Lo siguiente, que es un número, es el número de referencias al fichero en
+el FS. Referencias es el núemro de "nombres" que tiene el mismo espacio
+físico en disco (en este caso el fichero).
+
+Ejemplo: si creamos un fichero `touch fichero`, veremos que el número de
+referncias es 1; si creamos un hardlink con `ln fichero hard.link`,
+veremos que el número de referncias es 2.
+
+Con directorios es un opoco más raro: si creamos un directorio (mkdir) veremos 2 
+referencias (ls -dal nombre-dir).
+
+Una se refiere a su "ruta absoluta" (cómo llegar desde el inicio del FS);
+la otra se refiere a su "ruta relativa", cómo llegar a otros sitios desde
+ese directorio (el directorio se autoreferncia).
+
+Además, si creamos un subdirectorio, se ñade otra nueva referencia al directoiro
+padre. Esos son los 2 puntos (..) que hacen referencia al directorio padre,
+por eso se añade una nueva referncia.
+
+Los siguientes campos son usuario y grupo propietario (más adelante en permisos)
+
+Lo siguiente es el tamaño del fichero
+
+Luego fecha de modificación y por último nombre de archivo.
+
+Otras opciones útiles de ls: -d para mostrar info solo de directorios, sin
+mostrar los ficheros; -h combinada con -l muestra los tamaños de las cosas
+en una unidad más apropiada que bytes, que esl el por defecto.
+
+-r invierte el orden al mostrar las cosas, -t ordena de más nuevo a más antiguo;
+-S ordena de tamaño mayor a menor.
+
+### tree
+Muestra los contenidos de un directorio en forma arborescente.
+Las opciones útiles son -d, para moistrar solo directorios, -L n, para limitar
+los subniveles a los que bajar y -a para mostrar ocultos.
+
+### file
+intenta averiguar la extensión de un fichero basándose en su contenido
+
+### which
+nos dice dónde está el fichero del nombre del programa que le pasasmos cómo 
+parámetro: `which ls`
+
+### whereis
+como which pero te da más info
+
+### find
+Para encotrar cosas
+
+su sntaxis es ``find [-P|-H|-L] [<directorio>] [opciones]``
+
+Las 3 primeras opciones es el tratamiento de los symlinks (por defecto -P,
+no seguirlos). directorio es dónde debe empezar a buscar find; buscará también
+en subdirectorios. Luego tiene un montón de opciones que modifican el 
+comportamiento del programa. Las opciones siguen un orden que hay 
+que respetar: primero indicas opciones de modificación (de comportamiento);
+luego opciones de selección de ficheros (se define algún tipo de criterio y 
+si se cumple, se "coge" el fichero), por último tienes opciones de operación
+(sobre los ficheros encontrados).
+
+Debido a la cantidad de opciones que tiene find mejor no describirlo aquí
+y se busca info si en algún momento es necesario usar este programa.
+
+### du
+estima el espacio en disco que ocupan los directorios o ficheros que
+se le pasan por argumento. Se suele usar con la opción -s que limita
+el espacio que ocupa solo el fichero/directorio que se pasa como argumento
+y la opción -h, que igual que en ls, ajusta unidades a algo que no sean bytes.
+
+### cat
+técnicamente es conCATenar, pero sirve para mostrar por pantalla los contenidos
+de un fichero; si es texto plano lo podremos leer, si es algo binario, no.
+
+### more
+soluciona un problema que tiene cat que es que muetra todo de una; si es un 
+fichero largo no lo vemos bien, entonces lo que hace more es paginar, es decir,
+muestra lo que pueda por pantalla y queda a la esperta de una orden para
+mostrar los siguientes contenidos; los comandos que acepta son: enter para 
+avanzar una linea, espacio para avanzar una pantalla, b para retroceder una
+pantalla; q para salir
+
+### head
+para inspeccionar el comienzo de un fichero; por defecto se muestran las
+10 primeras lineas; puedo modificarlo con `head -n11 /etc/passwd`.
+También puedo indicar un número negativo, que se traduce a todas las
+lineas menos las N últimas.
+
+### tail
+igual que haed pero muestra por debajo (el final del fichero). Si se usa la 
+opción `+` muestra a partir de esa linea hasta el fincal; por ejemplo, 
+`tail -n+4 fichero` muestra de la linea 4 hasta el final.
+
+Esto es útil para ver los logs: la opción `-f` lo deja esperando a que se
+escriban cosas nuevas; ver `tail -f /var/log/syslog`
+
+### mkdir
+crea directorios; se pueden indicar varios de una tirada `mkdir dir1 dir2`
+pero para crearlos anidados necesito la opción -p `mkdir -p dir1/dir2`
+
+### touch
+en general para crea run fichero vacío; pero su uso real es cambiar las
+fechas de modificación o acceso a un fichero (touch -m ó touch -a)
+
+### rm
+remove, borraer ficheros. ütil usarlo con la opción -i que pedirá confirmación,
+así no borramos cosas que no deberíamos borrar. Su contraria es -f, que es
+"force", que borra sin miramientos. También sirve para borrar directorios si
+se indica la opción -r
+
+### mv
+move, mover/renombar un fichero o directorio. Se usa `mv [opts] origen destino`,
+es decir, hay que indicar primero dónde está lo que se quiere mover y leugo a
+dónde se quiere mover.
+
+Se pueden mover muchas cosas a la vez, pero solo si son ficheros/directorios a un directorio,
+por tanto el último argumento será el directorio de llegada y los otros son
+los ficheros/directorios a mover.
+
+Cosa: cuando en un origen, que es un directorio, lo indicas como `dir/`, lo
+que mueves son los contenidos del directorio, no el directorio en sí
+
+### cp
+copia; funciona prácticamente igual que mv. Puedoc opiar directorios con la 
+opción -r
+
+Hay una opción extra en cp que es -l, que lo que crear es un hard link;
+esencialmente es otro nombre para el mismo fichero.
+
+
+![hardlink](./images/config-basica/hardlink.jpg "hardlink")
+
+No se pueden hacer hardlinks de directorios.
+
+### ln
+sirve para crear hardlinks. Pero sobre todo para crear symlinks, añadiendo
+la opción -s. Los symlinks hacen referencia a un nombre de fichero/directorio.
+A diferencia de un hardlink, se pueden hacer entre distintos FS y se
+pueden enlazar directorios.
+
+A efectos, son un acceso directo al fichero/directorio al que apuntan.
+Tienen el problema de que si el apuntado "desaparece", el enlace queda roto.
+
+### realpath
+devuelve la ruta absoluta del fichero que se le pasa por argumento
+
+### readlink
+resuelve el symlink devolviendo el fichero al que apunta
 
 ## Config de red
 

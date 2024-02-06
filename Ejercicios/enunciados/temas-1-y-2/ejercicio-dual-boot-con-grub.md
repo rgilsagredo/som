@@ -114,7 +114,7 @@ Por supuesto esto no es siempre posible.
 
 Con esto, un posible particionado sería:
 
-![particionado](./img-ej-dual-boot-dos-bios/particionado.png "particionado")
+![particionado](./../img-ej-dual-boot-dos-bios/particionado.png "particionado")
 
 donde:
 - la partición 1 es para grub
@@ -140,10 +140,10 @@ Finalmente instalar Ubuntu; tener en cuenta 2 cosas:
     como activa/booteable, es decir, que al arrancar en BIOS, se buscará ahí
     cómo llegar al siguiente paso, que será el GRUB
 
-![bootloader](./img-ej-dual-boot-dos-bios/bootloader-install.png "bootloader")
+![bootloader](./../img-ej-dual-boot-dos-bios/bootloader-install.png "bootloader")
 
 Ua vez instalado Ubuntu, con fdisk o tu herramienta favorita cmabias el 
 flag de booteo y estamos listas. Para hacer eso, debemos meternos con
 un live cd, abrir la terminal y cambiar los flags:
 
-![flag-cambiado](./img-ej-dual-boot-dos-bios/flag-cambiado.png "flag-cambiado")
+![flag-cambiado](./../img-ej-dual-boot-dos-bios/flag-cambiado.png "flag-cambiado")../
