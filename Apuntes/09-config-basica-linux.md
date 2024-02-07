@@ -511,6 +511,90 @@ devuelve la ruta absoluta del fichero que se le pasa por argumento
 ### readlink
 resuelve el symlink devolviendo el fichero al que apunta
 
+
+## dispositivos
+lo que hay dentro de /dev son "ficheros" que representan los
+dispositivos del sistema.
+
+Pueden ser de 2 tipos: de caratceres, es decir, transmiten info byte a byte
+(raton -- psaux, terminales -- ttyN..).
+
+Hay algunos especiales, que no se corresponden con hardware:
+/dev/null -- es un "agujero negro"
+/dev/zero -- devuelve ceros
+/dev/random  o /dev/urandom -- devuelve numeros pseudoaleatroios
+
+el otro tipo es dispositivos de bloques. suelen nser los dispositivos de 
+almacenamiento:
+fdN los floppys, hd[a-z] los harddrives via IDE, sd[a-z] los harddrives
+via SATA o USB, sr0 el lector de CDs de SATA
+
+Cosas útiles: saber a que dispositivo físico se corresponde cada
+disco duro que detecta el sistema:
+```bash
+lsblk -dao name,model,serial
+```
+
+## Preparar un dispositivo
+son 2 cosas: hacer un particionado y dar un FS a las particiones.
+
+Ejemplo: crear disco virtual, enchufarlo a una máquina, hacer un
+particionado simplón (1 primaria que ocupe todo con FS ext4).
+Relamente aquí no hemos formateado el disco, para formatearlo
+tenemos que usar un programa que se llama `mkfs.<tipo>`, donde tipo
+puede ser ext4, xfs, btrfs, ntfs...
+
+Opciones útiles que puede tener este programa es -L LABEL para dar un label
+a la partición.
+
+```bash
+sudo mkfs.ext4 -L HOLA /dev/sdc1
+```
+
+eso formatearía la partición 1 del disco c con FS ext4 y le da la label HOLA
+
+## montaje
+en Unix existe un único árbol de directorios (en windows hay uo por cada disco),
+y en los directorios se montan los FS. El punto de montaje es el directorio
+donde se "accede" a un FS concreto.
+
+Una forma rápida de saber los puntos de montaje (y más cosas) de mis FS es
+`lsblk`. Otra amnera es ``df``, pero solo me dirá las cosas montadas.
+(df tiene la opción -h para ver mejor los tamaños)
+
+La herramienta para montar cosas es `mount`; si lo usas tal cual te dice
+las coas montadas, dónde y opciones de ese montaje.
+
+La forma más útil de usarlo es realmente montando algo, hay que decir el FS y 
+el sitio donde montar. Linux te da una carpeta, `/mnt`, que está pensada
+para hacer los montajes manuales de lo que quieras.
+
+Paa hacer un montaje, basta con:
+```bash
+mount /dev/sdc1 /mnt
+```
+
+montaría la partición 1 del disco c en esa carpeta.
+Algunas opciones habituales para mount son ``-o ro`` -- montar el dispositivo para 
+solo lectura, remontar para cambiar opciones, con `-o remount,rw /mnt` 
+(esto hace que cambien las opciones de acceos al FS).
+
+A veces (para FS ntfs), neesitas la opcion -t e indicar el Tipo de FS:
+
+```bash
+mount -t ntfs-3g /dev/sdd3 /mnt
+```
+
+para desmontar, basta usar `umount /mnt` o el punto de montaje que haya usado.
+Puede que a veces no te deje porque has dejado algo abierto; para averiguarlo,
+lanzas `lsof /mnt` o cualquier otro unto de montaje, si dice algo es 
+eso lo que tienes que cerrar para poder hacer el demsonte.
+
+Linux monta ciertos FS al inicio, para saber qué tiene que montar y donde,
+usa el fichero /etc/fstab, que se ve bastante mal, pero tiene la siguinte info:
+
+![fstab](./images/config-basica/fstab.jpg "fstab")
+
 ## Config de red
 
 ## ordenes avanzadas
