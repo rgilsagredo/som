@@ -156,7 +156,7 @@ y que se cambien cada cierto tiempo (3 meses suele ser algo habitual en
 las empresas), para evitar el robo de sesiones; especialmente importante
 si las máquinas contienen datos sensibles.
 
-## PErfiles de usuario
+## Perfiles de usuario
 Una herramienta un poco cutre pero es útil para tener una idea rápida de
 qué hay en la carpeta Users. para llegar aquí, 
 clcik derecho en ThisPC --> advanced setting y hay una tab de user
@@ -171,3 +171,38 @@ de loggeo (es decir, que cuando el usuario se conecte se ejecute ese
 script, puede ser por ejemplo configurar variables de entorno o
 enchufas unidades de red), y podemos también cambiarle la home a donde nos 
 de la gana
+
+## Grupos
+Igual que en Linux, existe el concepto de grupo en Windows, que son
+entidades que sirven para agrupar usuarios y que la gestión de la
+seguridad sea más cómoda.
+
+Todo usuario (salvo usuarios espaciales del sistema) debe pertenecer a 
+un grupo. Los usuarios pueden pertencer a uno o varios grupos.
+
+Para gestionar los grupos se llega de la misma manera que a los usuarios:
+
+![grupos-windows](./images/usuarios-windows/grupos-windows.jpg "grupos-windows")
+
+Windows crea sus propios grupos por defecto, a destacar:
+- Administradores: los que tienen acceso completo al sistema local. El usuario 
+    que creamos en la instalación está en este grupo (recurda que el usuario 
+    admin es inaccesible)
+- Usuarios: se les permite hacer las tareas habituales: ejecutar programas, 
+    ctener su espacio para crear/borrar/modificar ficheros... No se les 
+    permite acer cambios (accidentales o intencionados) en el sistema.
+    Cuando creamos un usuario caerá en este grupo por defecto.
+- Invitados: Son como los usuarios pero con más restricciones.
+- Otros grupos como: replicadores (para duplicar archivos), configuradors de
+    red, usuarios de escritorio remoto...
+
+Para administrar grupos, igual que usuarios. Podemos agregar usuarios
+(que ya existan) al crear el grupo o a posteriori, e incluso podemos
+ir directamente al usuario y agregarlo a un grupo:
+
+![agregar-user-a-group](./images/usuarios-windows/agregar-usuario-a-grupo.jpg "agregar-user-a-group")
+
+Los grupos no son modificables: existen o no existen; solo puedes cambiar
+quién pertence al grupo y borrarlos. PERO borrar el grupo implica que se pierdan
+los permisos asociados al grupo y por tanto esos permisos desaparecen de los
+usuarios
