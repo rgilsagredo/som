@@ -439,3 +439,159 @@ fi
 ```
 
 entonces eso ejecuta los ficheros .sh y cargo mis alias y variables.
+
+## Redireccionamiento de sdtin/stdout/stderr
+Cuando abrimos una shell, tenemos 3 ficheros abiertos de manera
+predeterminada: `/dev/stdin, /dev/stdout, /dev/stderr`.
+
+Se corresponden con teclado, pantalla y pantalla.
+
+Para probar que funcionan: el stdout es fácil, podemos hacer `cat` a un
+fichero, lo que hce este programa es coger el contenido de un fichero
+y sacarlo por stdout (y por eso lo vemos por pantalla).
+
+Si quiero probar la sdtin, también puedo usar `cat`, en este caso sin 
+argumentos; este modo de funcionamiento lo que hace es que espera
+input (por teclado, ie, stdin), y cuanod lo tiene lo muestra por stdout
+(para salir ``ctrl+d``).
+
+Para probar la stderr, basta con cometer un error. Aunque se muetsra por el
+mismo dispositivo, no es la misma salida.
+
+Las stds tienen números asociados, 0-in, 1-out, 2-err.
+
+### Redirección de stdin/stderr
+Consiste en que la salida no vaya a (la pantalla) si no a otro sitio
+(normalemnte un ficheor u otro programa).
+
+Por ejemplo te crear un fichero `/tmp/redireccion-stdout`, y si quieres
+que la stdin de un programa no vaya a pantalla si no a ese fichero, dices:
+
+```bash
+cat > /tmp/redireccion-stdout
+```
+
+Podremos ver (con cat de nuevo) que en vez de escribirse por pantalla,
+se alamcena en el fichero.
+
+En general, si rediriges, por defecto machaca lo que había en el fichero;
+a veces querrás añadir contenido, para lo cual dices:
+
+```bash
+cat >> /tmp/redireccion-stdout
+```
+
+También entre aquí en juego el fichero `/dev/null`, que es un agujero negro.
+Si no quiero saber la stdout, redirijo aquí.
+
+Ahora, para redirigir la stderr (hasta ahora solo hemos redirigido stdout;
+para comprobarlo, hacer `adadfd > /dev/null`), se usa la misma notación
+pero dices '2' para que la shell sepa que te refieres explicitamente a la
+stderr:
+
+```bash
+afffad 2> /dev/null
+```
+
+Si quieres redirigir ambas salidas a la vez, tienes el símbolo `&>`. En realidad
+lo puedes hacer también con una doble redirección:
+
+```bash
+asdadasd > /tmp/redireccion-stdout 2>&1
+```
+
+Eso de arriba se lee como: redirige la stout al fichero, y redirige la
+stderr a la stdout (hay que poner el & para que se entere). Entonces el 
+resultado final es que se escribe el error en el fichero.
+
+Si haces
+
+```bash
+asdadasd 2>&1 > /tmp/redireccion-stdout 
+```
+
+no funciona igual, porque aquí dices: redirigela stderr a stdout (que
+es la pantalla), y luego redirige stdout al fichero (como he dicho primero
+lo del error, el error no se escribe en el fichero)
+
+### Redireccionamiento stdin
+En ppio un programa (cat, por ejemplo) espera recibir datos por teclado, 
+redireccionar la stdin consiste en que reciba esos dtaos por otra via.
+
+Sin que sea una sorpresa, el simbolo es `<`:
+
+```bash
+cat < fichero-con-cosas
+```
+
+Otra cosa (que ya hicimos) es hacer una redirección con lo que se llama
+"here document", que es un "texto largo" de varias lineas. Para eso se 
+define un "fin" (normalmente EOF - End Of File) para que la stdin
+sepa cuando termina el input:
+
+```bash
+cat <<EOF
+> linea 1
+> linea 2
+> linea 3
+> EOF
+```
+
+Cosas que ocurren aquí: si al EOF lo pongo entre comillas, no se 
+interpreta nada:
+
+```bash
+cat <<"EOF"
+1 + 2 = $((1+2))
+EOF
+```
+
+```bash
+cat <<EOF
+1 + 2 = $((1+2))
+EOF
+```
+
+
+
+### pipelines
+Ya vimos arriba lo que son, es un redireccionamientdo de stdin y
+stdout ambos a la vez. Ojo que no redirecciona stderr, si quieres que lo
+haga debes hacer:
+
+```bash
+ls /g* 2>&1 | head -n1
+```
+
+Hay una orden que se usa mucho con las redirecciones:
+
+#### tee
+redirecciona su entrada a stdout y a un fichero que indiquemos:
+
+```bash
+ls / | tee /tmp/listado.txt
+```
+
+#### named pipelines
+Todo lo de las tuberías asume que tanto el programa primero puede escribir
+en stdout como que el programa segundo puede leer de stdin; lo cual no 
+es siempre cierto. Si tenemos alguno de esos casos, en vez de crear un fichero
+de en medio para que uno escriba u el otro lea, puedes crear una named pipeline
+que es un fichero especial que hace de "ese fichero del medio". Entocnes haces:
+
+```bash
+mkfifo /tmp/pipeline
+```
+
+y ahora que he creado la pipeline, si es el primer programa quien necesita
+escribir a fichero (no puede escribir a stdout), haremos esta redirección:
+
+```bash
+programa1 /tmp/pipeline & programa2 < /tmp/pipeline
+```
+
+Si es el programa2 quien no sabe leer de stdin, haces:
+
+```bash
+programa1 > /tmp/pipeline & programa2 /tmp/pipeline
+```
