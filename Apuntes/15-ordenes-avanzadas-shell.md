@@ -595,3 +595,31 @@ Si es el programa2 quien no sabe leer de stdin, haces:
 ```bash
 programa1 > /tmp/pipeline & programa2 /tmp/pipeline
 ```
+
+### read
+Lee la ``stdin`` y almacena su valor en una variabl que se proporciona 
+como argumento:
+
+```bash
+read VAR 
+```
+
+la terminal queda a la espera de que le metamos algo por stdin, y `read`
+lo almacenará en `VAR`, podemos verlo con `echo $VAR`.
+
+Las opciones que se suelen usar con `read` son `-r` para que `\` no sea
+un caracter espacial.
+
+`read` lee hasta que encuentra su delimintador por defecto, que es un salto
+de linea. 
+
+Lo bueno de read es que permite meter le valor de varias variables a la vez,
+pero tenemos que combinarla con otra variabla de entorno que tenemos
+prefedinida que es la `$IFS` (Internal Field Separator), para básicamente
+leer datos tabulados separados por algún separador. Con IFS definimos el 
+separador, con read leemos:
+
+```bash
+IFS=:
+read -r user _ uid gid gecos home shell <<< $(getent passwd $USER)
+```

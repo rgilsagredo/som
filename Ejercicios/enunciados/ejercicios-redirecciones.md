@@ -12,3 +12,4 @@ siguiente verso: *Rico en inverno y pobre en el estío,*
 6. Ejecuta: `tar sjsjsjss`. Dará un error. Quiero ver el error en mayúsculas
 7. Cuantos ficheros invisibles tienes en `~`?
 8. encuentra el fichero que contiene esto: `root:x:0:0:root:/root:/bin/bash`
+9. Definir en una orden las variables `a b c` con valores `1 2 3`
