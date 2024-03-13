@@ -182,3 +182,215 @@ Y ejecutarlo con
 flatpak run com.google.Chrome
 ```
 
+### Instalación manual con paquetes de la distro
+Vamos a instalar ahora manualmente Chrome usando paquetes de la distro
+(.deb). Primero tenemos que encontrar y descargar esos paquetes; basta
+saber hacer una búsqueda por Google o tu buscador favorito.
+
+Te desacragas el .deb, vemos que lo tenemos en `~/Downloads`.
+Una vez que estamos ahí, basta con usar el gestor `dpkg`:
+
+```bash
+sudo dpkg --install nombre-del-paquete.deb
+```
+
+cuando termine, podemos eliminar el .deb, y comprobar que el programa
+se ha instalado con `which google-chrome`
+
+
+### Instalación manual desde source code
+Primero tenemos que descaragr el código. Para el ejemplo, vamos a instalar
+VIM manualmente. Buscamos el repo de github con el SC. Descargamos,
+descomprimimos (debería haberse descargado un .zip, para descomprimir,
+tenemos la utilidad `unzip`)
+
+Una vez descargado, vamos a la carpeta unzippeada, y si se han hecho
+las cosas bien, suele venir un fichero ejecutable llamado `config` o similar
+que nos prepara el equipo para hacer el build.
+
+En mi caso, al ejecutar `./configure`, me informa de que me falta una 
+librería por intalar, la instal con:
+
+```bash
+sudo apt install libncurses-dev
+```
+
+Tras que el fichero de config me de el OK, podemos pasar a compilar el
+código fuente con
+
+```bash
+sudo make
+```
+
+o podemos usar `sudo make -j $(nproc)` para que use todos los procesadores
+y vaya más rápido. Cuando ha compilado, instalamos con
+
+```bash
+sudo make install
+```
+
+Y si no hay problemas, lo tendremos instalado. Podemos verlo con `which`
+
+
+## Gestores de paquetes
+Son aplicaciones que gestionan un sistema de paquetes concretos. Por ejemplo,
+apt es la que gestiona los paquetes .deb, flatpak es la que gestiona los
+paquetes tipo .flatpak. Existen algunas apps que son "multipaquetería".
+
+Ahora vamos a ser muy *Debian* (y derivados, como Ubuntu) específicos.
+Los gestores que tenemos son 
+
+### dpkg
+más que un gestor, es la base para instalar, actualizar y borrar paquetes .deb
+Es lo que usan los gestores de aquí abajo
+
+### apt
+Antes existía una familia de app `apt-*`, se simplificó en una única que es la
+`apt`.
+
+#### Básicos
+Suponiendo que tenemos un repo válido, lo primero es siemrpe actualizar
+el listado de paquetes con `apt update`. Siempre es recomendable hacer esto
+pues lo normal es que los paquetes se actualicen a menudo.
+
+Tras actualizar el listado, podemos actualizar en nuestro sistema un 
+paquete o todos a su nueva versión con `apt upgrade`. Esta es la versión
+no traumática, ie, cuando no hay un cambio en la estructura de paquetes
+significativo. Pero puede que sí lo haya (el equipo que mantiene el
+sistema de paquetes ha decidido cambiar cosas; tengo que borrar o mover
+ciertos paquetes). Para eso tienes `apt dist-upgrade` (ojo que en distros
+estables como Ubuntu20.04, esto no tiene sentido, las actualizaciones serán
+siemrpe de seguridad o fix)
+
+Para instalr software, basta con `apt intall <nombre-del-programa>`
+
+Para desinatalar, `apt remove` o `apt purge`. La diferencia es que remove
+deja los fichero sde config del programa por si se vuelve a reinstalar en el 
+futuro, no tener quw volver a hacer la config; pero si quiero elminiar todo
+lo sociado con el programa purge es tu opción.  
+
+Ojo que al desinatalr un programa puede que se nos quede algún paquete del 
+que se dependía por ahí suelto. El gestor sabe de esto, ya que marca 
+los paquetes instalados como `manual` o `auto`, los auto son justamente los que
+se instalan solo para satisfacer dependencias.
+
+También puede que tengamos huérfanos por ahí, para elminiarlos, `apt autoremove`,
+pero podemos incluir esta opción en las operaciones de install/upgrade/remove/purge
+para no tener que andar haciendo esto todo el rato.
+
+Para saber el listado de paquetes instalados, `apt list`, que puedes combinar con
+patronesd e búsqueda como `apt list pyt?on*`. Tienes las opciones de 
+`--installed` o `--upgradable` para filtrar más.
+
+### otras de Debian
+puede que se encuentre en algún sistema antiguo cosas tipo `dselect`, `aptitude`
+o `synaptic`
+
+### otras de otras distros
+yum para RedHat, zypper para Suse, pacman para Arch...
+
+## Repos
+Lo habitual es que los paquetes se obtengan de internet. Para que apt
+o tu gestor favorito sepa donde buscar, suele haber definido
+un fichero con las URL de los repos. En caso de apt, está en
+`/etc/apt/sources.list`
+
+Cada linea del fichero es un repo donde buscar paquetes, la info se almacena
+de la siguiente manera:
+lo primero es `deb` o `deb-src`; en el seundo caso queire decir que es
+SC y tocará compilar. Lo siguiente es la URL del repo. El siguiente campo
+es el nombre de la distro (la 20.04 es Focal Fossa) quizás con nombre de 
+rama (por ejemplo updates). Lo último se llama componente, suele ser siempre
+`main`.
+
+Este fichero es de la distro y no se debe tocar, si quiero añadir mis
+propios repos, lo hago en un fichero en esta ruta:
+```bash
+/etc/apt/sources.list.d/nombre-fichero.list
+```
+
+### Ejemplo
+Vamos a instalar VSCode añadiendo el repo de la deescarga. Ignorar de momento
+las cosas extra. Primero, necesitamos ciertos paquetes:
+
+```bash
+sudo apt install software-properties-common apt-transport-https wget -y
+```
+
+Segundo, necesitamos la GPG:
+
+```bash
+wget -O- https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor | sudo tee /usr/share/keyrings/vscode.gpg
+```
+
+Finalente, estamos donde queremos. Vamos a añadir el repo donde está el programa
+a un listado para apt con:
+
+```bash
+echo deb [arch=amd64 signed-by=/usr/share/keyrings/vscode.gpg] https://packages.microsoft.com/repos/vscode stable main | sudo tee /etc/apt/sources.list.d/vscode.list
+```
+
+Tras esto apt ya sabe buscar el programa (primero hay que apt update), 
+y podremos instalarlo con `apt install code`
+
+
+### Repos extraoficiales
+Como el de MS que hemos usado antes, hemos tenido que añadir una PubKey GPG
+para que sea confiable. Es una operación bastante común, simplemente añade
+la PubKey a listado de claves de apt y listo
+
+## Acciones sobre paquetes
+Los ficheros de un paquete se obtienen con `dpkg -L <paquete>`.
+Podemos ir al revés, ver qué paquete instala un programa concreto:
+
+```bash
+dpkg -S $(which python3)
+```
+
+*NOTA*: como `/bin` dejó de existir y es solo un symlink a `/usr/bin`,
+a veces parece que no podemos encontrar qué paquetes instalan
+cierto software (por ejemplo ls, pq el paquete que lo instala dice
+/bin y no /usr/bin), entonces se suele añadir `which -a` para que busque mejor.
+
+dpkg también ayuda a instalar un .deb descargado a mano con
+```bash
+dpkg --install pak.deb
+```
+
+Ojo que esta opción es normal que me instale cosas inutilizables porque 
+el paquete tenía unas dependencias que no tnego instaladas; para solocionar ese
+problema, `apt -f intall` se encargará de instalarnos las dependencias.
+Pero en general es mejor no hacer eso y usar `apt install pak.deb` que
+ya hará todo de una.
+
+Para saber las dependencias de un paquete, `apt depends <nombre-paquete>`,
+y sus dependentes con `apt rdepends <nombre-paquete>` (los que dice aquí
+son todos sus dependeientes, no tengo por qué tenerlos instalados)
+
+Si quiero saber por qué un paquete está instalado, usa este comando:
+
+```bash
+apt rdepends --installed --no-suggests --no-breaks --no-replaces --recurse <paquete>
+```
+
+*Podemos hacer el ejemplo con policykit-1*
+
+y nos dará un listado de todas las reverse-dependencies (es decir, las cosas
+instaladas que al final del día dependen de esto).
+
+Además con `apt list <paquete>` ppodemos ver si el apquete concreto se
+instaló manual o auto. Eso se llaman marcas. Los marcados como auto se instalan
+para satisfacer dependencias. Si quitamos un paquete que es una dependencia
+de un programa que usemos, el programa ya no va a funcionar.
+
+Los marcados
+ como manual es que dijomos explícitamente que queríamos instalarlos.
+
+También se puede marcar con paquete como `holded` y nunca se actualizará
+ni borrará.
+
+Para marcar, usamos `apt-mark auto/manual/hold/unhold <paquete>`
+
+Tenemos también más opciones como `apt-mark showmanual/showauto/showhold`
+para obtener listados. También existen `showinstall/showremove/showpurge`
+

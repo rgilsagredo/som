@@ -1,0 +1,13 @@
+# Ejericcios de gestión de software
+- actualizar listado de paquetes
+- actualizar el sistema
+- actualziar a la vez que elminas lo inecesario
+- hacer actualización completa del sistema, aunque suponga sustituir paquetes
+- instalar herramientas para soportar el FS NTFS
+- instalar la versión light de nginx
+- en una orden, desinstalar la versión anterior e instalar la versión completa
+- averiguar a qué paquete pertenece el ejecutable de nginx
+- averiguar si está instalado el paquete gcc
+- averiguar para qué sirve le paquete vlan
+- buscar e instalar un paquete que permita jugar por la bash al Pacman
+- desinstalar todo lo anterior
