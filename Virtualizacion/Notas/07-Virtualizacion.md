@@ -24,14 +24,14 @@ de virtualización completa:
 ##### Virtualización nativa o tipo 1
 En este caso, el hypervisor se ejecuta directamente sobre el hardware
 
-![native-virtualization](./images/virtualizacion/native-virtualization.png "native-virtualization")
+![native-virtualization](./images/native-virtualization.png "native-virtualization")
 
 Es más eficiente, ya que no "hay que pasar" por el OS del host
 
 ##### Virtualización alojada o tipo 2
 En este caso, el hipervisort se ejecuta sobre el OS del host
 
-![hosted-virtualization](./images/virtualizacion/hosted-virtualization.png "hosted-virtualization")
+![hosted-virtualization](./images/hosted-virtualization.png "hosted-virtualization")
 
 #### Por "privilegios"
 Algunas plataformas incluyen en los procesadores instrucciones para ayudar en
@@ -46,7 +46,7 @@ Para el guest no se crea un hardware virtual, tiene los drivers para hacer las
 peticiones al hardware del host. Como no virtualiza hardware, mejora rendimeinto.
 A cambio, no todo OS se puede paravirtualizar
 
-![paravirtualizacion](./images/virtualizacion/paravirtualization.png "paravirtualizacion")
+![paravirtualizacion](./images/paravirtualization.png "paravirtualizacion")
 
 Hay una versión híbrida entre la completa y la para, donde se paravirtualiza
 hardware que sea difícil de virtualizar
@@ -67,7 +67,7 @@ Lo bueno de los containers es que pesan poco y rinden bien. Lo malo es que
 como no tienen OS (usan el del host), las apps que corran en los containers
 tienen que estar hechas para el OS host
 
-![container](./images/virtualizacion/containers.png "container")
+![container](./images/containers.png "container")
 
 ## Software de virtualización
 Al usar software de virtualización para instalar y probar OSs queremos,
