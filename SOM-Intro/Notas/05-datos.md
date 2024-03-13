@@ -418,7 +418,7 @@ etc
 Más o menos (seguramente no esté actualizado) una idea de órdenes de magnitud
 de transferencia:
 
-![magnitudes-transferencia](./images/misc/magnitudes-transferencia.png "Magnitudes de transferencia")
+![magnitudes-transferencia](./images/magnitudes-transferencia.png "Magnitudes de transferencia")
 
 ##### Ejercicios
 - Convertir:
