@@ -181,7 +181,7 @@ Las opciones que estamos pasando al programa son -d -> solo muestra directorios
 y -L 1 -> baja solo 1 nivel respecto al directorio que te digo, que en este
 caso es el directorio raíz /
 
-![tree](./images/config-basica/tree.jpg "tree")
+![tree](./images/tree.jpg "tree")
 
 Lo que vemos son los directorios bajo la raiz, y esos que apuntan son
 symlinks, enlaces simbólicos; eso es que se directorio realmente "no tiene
@@ -352,12 +352,12 @@ list, nos dice el contenido de un directorio.
 Entre las muchas opciones que puede llevar, suele ser últil la opción
 `-l`, que devuelve información sobre el directorio o fichero:
 
-![ls-l](./images/config-basica/lsl.jpg "ls-l")
+![ls-l](./images/lsl.jpg "ls-l")
 
 La info que s emuestra ahí es la siguiente:
 el primer carácter es el tipo de fichero, siendo estos lo posibles tipos:
 
-![tipos-fichero](./images/config-basica/tipos-fichero.jpg "tipos-fichero")
+![tipos-fichero](./images/tipos-fichero.jpg "tipos-fichero")
 
 los siguientes 9 caracteres, que van de 3 en 3, son los permisos en
 formato UGO (User Group Others); los permisos son de write, read, execute.
@@ -492,7 +492,7 @@ Hay una opción extra en cp que es -l, que lo que crear es un hard link;
 esencialmente es otro nombre para el mismo fichero.
 
 
-![hardlink](./images/config-basica/hardlink.jpg "hardlink")
+![hardlink](./images/hardlink.jpg "hardlink")
 
 No se pueden hacer hardlinks de directorios.
 
@@ -593,8 +593,6 @@ eso lo que tienes que cerrar para poder hacer el demsonte.
 Linux monta ciertos FS al inicio, para saber qué tiene que montar y donde,
 usa el fichero /etc/fstab, que se ve bastante mal, pero tiene la siguinte info:
 
-![fstab](./images/config-basica/fstab.jpg "fstab")
+![fstab](./images/fstab.jpg "fstab")
 
 ## Config de red
-
-## ordenes avanzadas

@@ -9,7 +9,7 @@ personal del usuario
 
 - crear esta estructura de directorios:
 
-![ejerciico](./images-ejercicios-basicos/estructura-dirs.jpg "ejerciico")
+![ejerciico](./images/estructura-dirs.jpg "ejerciico")
 
 - cambiarse al directorio temporal
 
@@ -30,7 +30,7 @@ personal del usuario
 - entrar en el directorio temporal de manera relativa
 - consultar los permisos del directorio /
 - crear esta estructura (los ficheros vacíos):
-![ejercicio-2](./images-ejercicios-basicos/estructura-dirs-2.jpg "ejercicio-2")
+![ejercicio-2](./images/estructura-dirs-2.jpg "ejercicio-2")
 
 - mover DIRAA dentro de DIRB
 - buscar todos los ficheros de extensión .txt que están en el directorio temporal
