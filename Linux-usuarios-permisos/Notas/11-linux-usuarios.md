@@ -36,7 +36,7 @@ sudo vim /etc/group
 
 veremos algo así:
 
-![/etc/group](./images/usuarios-linux/etc-group.jpg "/etc/group")
+![/etc/group](./images/etc-group.jpg "/etc/group")
 
 Cada linea del fichero es un grupo, y cada campo info sobre ese grupo:
 1. primero, el nombre del grupo
@@ -55,7 +55,7 @@ Cada linea del fichero es un grupo, y cada campo info sobre ese grupo:
 Almacena usuarios y sus datos. Tiene esta pinta:
 
 
-![etc/passwd](./images/usuarios-linux/etc-passwd.jpg "etc/passwd")
+![etc/passwd](./images/etc-passwd.jpg "etc/passwd")
 
 La info que tiene cada linea es la siguiente:
 1. nombre del usuario
@@ -92,13 +92,13 @@ deniega el acceso.
 Almacena las contraseñas (cifradas) de los usuarios, e info adicional sobre esas
 contraseñas:
 
-![etc/shadow](./images/usuarios-linux/etc-shadow.jpg "etc/shadow")
+![etc/shadow](./images/etc-shadow.jpg "etc/shadow")
 
 La info que se muestra es:
 1. nombre del usuario
 2. separados por `$`
     - el algoitmo que se usa para cifrar la contraseña, los posibles valores son:
-    ![algoritmos-passwd](./images/usuarios-linux/algoritmos-passwd.jpg "algoritmos-passwd")
+    ![algoritmos-passwd](./images/algoritmos-passwd.jpg "algoritmos-passwd")
     - la "sal" que se usa para cifrar la contraseña
     - la contraseña cifrada
 3. Es el último cambio de password, contado en dias desde el 1 de enero de 1970,
@@ -114,7 +114,7 @@ La info que se muestra es:
     el usuario
 8. el día que expira la cuenta, contado en número de días desde el epoch
 
-![etc-shadow](./images/usuarios-linux/etc-shadow-explained.jpg "etc-shadow")
+![etc-shadow](./images/etc-shadow-explained.jpg "etc-shadow")
 
 **NOTA** cómo se general la contraseña: es un algoritmo matemático que 
 parte de una "sal" y genera un cifrado; si se la sal y la password, puedo

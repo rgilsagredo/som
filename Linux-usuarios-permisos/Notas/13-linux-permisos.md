@@ -27,7 +27,7 @@ lo que puede hacer el resto.
 
 Podemos ver los permisos de una "cosa" con `stat` o `ls -l`:
 
-![permisos](./images/permisos-linux/permisos-fichero.jpg "permisos")
+![permisos](./images/permisos-fichero.jpg "permisos")
 
 La info que muestra esto es:
 1. perimer símbolo: tipo de fichero (ya se vio en cosas básicas de linux)
@@ -48,7 +48,7 @@ r = 4, w = 2, x = 1.
 
 Podemos ver los permisos en formato numérico con `stat`:
 
-![permisos](./images/permisos-linux/permisos-2-fichero.jpg "permisos")
+![permisos](./images/permisos-2-fichero.jpg "permisos")
 
 ¿Cómo se traduce de números a letras? En el fichero del ejemplo vimos que
 los permisos eran U=`rw-` G=`rw-` O=`r--`; usando la conversión, se traduce en los
