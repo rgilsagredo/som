@@ -2,7 +2,7 @@
 - Crear el fichero vacio ``captura$1.jpg``.
 - Desde el directorio peronal y Utilizando expansiones, crear el siguiente árbol
     de directorios de la manera más corta posible:
-![ej2](./images-ej-avanzado-bash/ej2.jpg "ej2")
+![ej2](./images/ej2.jpg "ej2")
 - Sin cambiar de directorio de trabajo, borrar los directorios D23 y D25 
     (del modo más corto posible).
 - Mostrar por pantalla los directorios hijos de / que contengan la cadena 
