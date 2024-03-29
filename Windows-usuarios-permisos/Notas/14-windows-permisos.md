@@ -36,7 +36,7 @@ Hay que entender cómo se aplican las reglas ya que pueden existir solapamientos
 - Para cada caso anterior, tiene preferencia la relga de denegación a la de 
     concesión
 
-![orden-reglas](./images/permisos-windows/orden-reglas.jpg "orden-reglas")
+![orden-reglas](./images/orden-reglas.jpg "orden-reglas")
 
 ## Permisos
 Hay muchos más que 3 permisos, que se pueden dar a usuarios o grupos, o
@@ -68,18 +68,18 @@ Pueden ser varias cosas:
 Para poder tocar estas cosas, vamos a un fichero o directorio y damos botón 
 derecho:
 
-![llegar-a-permisos](./images/permisos-windows/llegar-a-permisos-1.jpg "llegar-a-permisos")
+![llegar-a-permisos](./images/llegar-a-permisos-1.jpg "llegar-a-permisos")
 
 Seleccionamos la tab de "security":
 
-![llegar-a-permisos](./images/permisos-windows/llegar-a-permisos-2.jpg "llegar-a-permisos")
+![llegar-a-permisos](./images/llegar-a-permisos-2.jpg "llegar-a-permisos")
 
 Y ahí, en "edit", podemos añadir/elminar/modificar grupos o usuarios
 y los permisos básicos que tendrá sobre le objeto; si queremos ver todos los
 permisos que podemos conceder, debemos seleccionar al usuario o grupo
 y pulsar "advanced"
 
-![llegar-a-permisos](./images/permisos-windows/llegar-a-permisos-3.jpg "llegar-a-permisos")
+![llegar-a-permisos](./images/llegar-a-permisos-3.jpg "llegar-a-permisos")
 
 Donde podemos explícitamente ceder o dendegar cualquiera de los permisos
 que nos ofrece Windows.
@@ -105,7 +105,7 @@ que le quitas ese permiso.
 Respecto a la herencia, en un directorio, al tocar permisos, puedes
 decidir que sean o no heredables:
 
-![herencia](./images/permisos-windows/herencia.jpg "herencia")
+![herencia](./images/herencia.jpg "herencia")
 
 Y sobre archivos puedes decidir si una regl heredada debe convertirse en
 propia (ya que realmente no es una regla del archivo), o directamente
@@ -121,13 +121,13 @@ reglas (darlas o quitarlas) a un usuario (que se llama "Usuario") y a un
 grupo (que se llama "Usuarios") al que pertence el usuario, ¿qué reglas se 
 aplican al usuario?:
 
-![permisos-efectivos](./images/permisos-windows/permisos-efectivos.jpg "permisos-efectivos")
+![permisos-efectivos](./images/permisos-efectivos.jpg "permisos-efectivos")
 
 ## Directivas de seguridad
 Permiten configurar aspectos de seguridad. Se accede buscando "local security
 policy" o "secpol.msc"
 
-![secpol](./images/permisos-windows/secpol.jpg "secpol")
+![secpol](./images/secpol.jpg "secpol")
 
 Las interesantes son las de "account", donde podemos cambiar aspectos
 relacionados con las contraseñas, y las directivas locales, que permiten

@@ -16,7 +16,7 @@ De manera gráfica, podemos ir a "This PC" (este equipo), botón derecho,
 "Manage" (administrar) y tendremos el panel de adminstración del equipo,
 de ahí podemos navegar hasta los usuarios locales:
 
-![winCompMGMT](./images/usuarios-windows/computerManagement.jpg "winCompMGMT")
+![winCompMGMT](./images/computerManagement.jpg "winCompMGMT")
 
 <!-- También podemos verlos con con PowerShell (la terminal de windows) via
 
@@ -182,7 +182,7 @@ un grupo. Los usuarios pueden pertencer a uno o varios grupos.
 
 Para gestionar los grupos se llega de la misma manera que a los usuarios:
 
-![grupos-windows](./images/usuarios-windows/grupos-windows.jpg "grupos-windows")
+![grupos-windows](./images/grupos-windows.jpg "grupos-windows")
 
 Windows crea sus propios grupos por defecto, a destacar:
 - Administradores: los que tienen acceso completo al sistema local. El usuario 
@@ -200,7 +200,7 @@ Para administrar grupos, igual que usuarios. Podemos agregar usuarios
 (que ya existan) al crear el grupo o a posteriori, e incluso podemos
 ir directamente al usuario y agregarlo a un grupo:
 
-![agregar-user-a-group](./images/usuarios-windows/agregar-usuario-a-grupo.jpg "agregar-user-a-group")
+![agregar-user-a-group](./images/agregar-usuario-a-grupo.jpg "agregar-user-a-group")
 
 Los grupos no son modificables: existen o no existen; solo puedes cambiar
 quién pertence al grupo y borrarlos. PERO borrar el grupo implica que se pierdan
