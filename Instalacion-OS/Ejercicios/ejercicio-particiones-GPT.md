@@ -21,7 +21,7 @@ sgdisk -p 0.disk
 
 Como no hemos creado aun nada, debería decirnos esto:
 
-![tabla-particiones-vacia](./images-ejercicio-particiones-GPT/tabla-particiones-vacia.png "tabla-particiones-vacia")
+![tabla-particiones-vacia](./images/tabla-particiones-vacia.png "tabla-particiones-vacia")
 
 
 La info que nos da es que la tabla GTP empieza en el sector 2 (el sector 0

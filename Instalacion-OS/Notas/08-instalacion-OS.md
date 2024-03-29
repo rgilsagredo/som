@@ -70,7 +70,7 @@ Las particiones que no empiezan en esos sectores se llaman no alineadas.
 Se basa en la existencia de un MBR (Master Boot Record), que es que 
 un primer sector del disco tiene la metainfo del particionado:
 
-![MBR](./images/particiones/MBR.png "MBR")
+![MBR](./images/MBR.png "MBR")
 
 - Los primeors 446 bytes tienen un código de arranque
 - los siguientes tienen una tabla de particiones del disco
@@ -81,7 +81,7 @@ defina las particiones del disco. Cada aprticion se defie con 16B, por tanto,
 en ppio solo puedo tener 4 particiones. Para cada partición se almacena
 la siguiente info:
 
-![tabla-particiones](./images/particiones/tabla-particiones.png "tabla-particiones")
+![tabla-particiones](./images/tabla-particiones.png "tabla-particiones")
 
 Notas: solo puede existir una partición como activa y su valor del byte de 
 activa será de 0x80, el resto 0x0. Se usa un direccionamiento de bloque lógico
@@ -93,7 +93,7 @@ posible a almacenar. Se llama partición primaria a la que tiene info en
 la tbla de particiones. 
 
 En este ejemplo:
-![part-DOS](./images/particiones/particion-DOS.png "part-DOS")
+![part-DOS](./images/particion-DOS.png "part-DOS")
 
 se muestra como queda un particionado con 3 particiones primarias.
 El espacio entre MBR y la primera partición es porque hay alineamiento, entonces
@@ -106,7 +106,7 @@ las particiones extendidas, que son particiones primarias para contener más
 particiones. Las particiones que están en una extendida se laman lógicas.
 Solo puedes tener una partición primaria extendida.
 
-![DOS-extendida](./images/particiones/particion-DOS-extendida.png "DOS-extendida")
+![DOS-extendida](./images/particion-DOS-extendida.png "DOS-extendida")
 
 La partición primaria que va a ser la extendida se marca con 0x05; el primer
 sector de una extendida se llama EBR (Entended Boot Record) y es igual que un
@@ -137,7 +137,7 @@ búsqueda "create and format hard disk partitions". Seguramente nos salte
 un mensaje de inicializar disco; podemos darle a ok seleccionando MBR como
 estilo de particion:
 
-![ej-particion-DOS-W10](./images/particiones/windows/ej-particiones-w10-1.png "ej-particion-DOS-W10")
+![ej-particion-DOS-W10](./images/ej-particiones-w10-1.png "ej-particion-DOS-W10")
 
 Con eso hemos creado un sistema de particionado tipo DOS en el disco.
 Creamos 4 particiones de 20GiB cada (20480MiB=20GiB). No les damos formato.
@@ -146,7 +146,7 @@ En la 4a partición, crear 5 particiones de 1 GiB (=1024MiB), ver que en la
 partición extendida sí puedo crear muchas particiones (más de 4). Ver que 
 el Os la detecta correctamente como primarias y lógicas
 
-![ej-particiones-DOS-W10](./images/particiones/windows/ej-particiones-w10-2.png "ej-particiones-DOS-W10")
+![ej-particiones-DOS-W10](./images/ej-particiones-w10-2.png "ej-particiones-DOS-W10")
 
 Tomar una snapshot, que vamos a romper cosas. En el disco C en el que instalamos 
 el OS, tenemos una partición primera que dice "System Reserved", es activa
@@ -155,7 +155,7 @@ y de System. Vamos a la partición de C y la marcamos como activa (botón derech
 Seguramente nos amenace, le decimos que sabemos qué hacemos. Si reiniciamos el 
 equipo, nos dirá que:
 
-![ej-particiones-DOS-W10](./images/particiones/windows/ej-particiones-w10-3.png "ej-particiones-DOS-W10")
+![ej-particiones-DOS-W10](./images/ej-particiones-w10-3.png "ej-particiones-DOS-W10")
 
 Es correcto que pase esto, pues la partición activa es la que tiene los ficheros
 para bootear es sistema; y estaban en System Reserved. No es que no podamos
@@ -169,14 +169,14 @@ Si queremos info de las particiones, podemos ir a properties de un disco
 (ver en que bus está el disco usando también VBox), y selecionamos, y en
 volumen --> populate veremos info:
 
-![ej-particiones-4](./images/particiones/windows/ej-particiones-w10-4.png "ej-particiones-4")
+![ej-particiones-4](./images/ej-particiones-w10-4.png "ej-particiones-4")
 
 Para sacar info completa de los discos, podemos usar diskpart: vamos a un 
 CMD y escribes diskpart (necesitaras permisos de admin). 
 Enchufado en diskpart, dices `list disk` --> `select disk n` -->
 `list partition`
 
-![ej-particiones-W10](./images/particiones/windows/ej-particiones-w10-5.png "ej-particiones-W10")
+![ej-particiones-W10](./images/ej-particiones-w10-5.png "ej-particiones-W10")
 
 Y ahí vemos más info, en concreto el offset: es donde empieza la partición
 (entre el bloque MBR y 1MiB hay espacio no usado). Si ahora creamos
@@ -189,7 +189,7 @@ wmic partition get BlockSize, StartingOffset, Name, Index
 ```
 desde la CMD:
 
-![ej-particiones-W10](./images/particiones/windows/ej-particiones-w10-6.png "ej-particiones-W10")
+![ej-particiones-W10](./images/ej-particiones-w10-6.png "ej-particiones-W10")
 
 Starting offset nos dice en bits donde empieza la partición, y blocksize es 
 el tamaño de sector. Las particiones están bien alineadas si 
@@ -375,16 +375,16 @@ que la tabla de particiones ocupe 16KiB, así que se podrán tener 128 particion
 (es ampliable). Por tanto, ya no tienen sentido partciones primarias y lógicas
 
 - La definición de cada partición es:
-![def-part-GUID](./images/particiones/definicion-particiones-GUID.png "def-part-GUID")
+![def-part-GUID](./images/definicion-particiones-GUID.png "def-part-GUID")
 
 - al final del disco hay una copia de la estructura
 
 - La primera partición empieza en el sector que determine la alineación; como
 normalmente es de 1MiB, empezará en el sector 2048
 
-![tabla-particiones-GPT](./images/particiones/tabla-particiones-GUID.png "tabla-particiones-GPT")
+![tabla-particiones-GPT](./images/tabla-particiones-GUID.png "tabla-particiones-GPT")
 
-![particiones-GUID](./images/particiones/disco-con-particiones-GUID.png "particiones-GUID")
+![particiones-GUID](./images/disco-con-particiones-GUID.png "particiones-GUID")
 
 
 
@@ -495,7 +495,7 @@ reglas: en particionado GPT de un disco se crea una partición de FS FAT32 y tip
 ESP (EFI System Partition); en esa partición se crea una estructura de directorios
 como esta:
 
-![directorio-particion-EFI](./images/arranque/directorio-particion-EFI.png "directorio-particion-EFI")
+![directorio-particion-EFI](./images/directorio-particion-EFI.png "directorio-particion-EFI")
 
 Cada OS crea un directorio dentro de /EFI con lo básico para arrancar el OS
 o comenzar el arranque.
@@ -550,18 +550,18 @@ elminar linux sin perder GRUB.
 boot.img siempre irá en el MBR y core.img  irá entre el MBR y la
 primera partición:
 
-![GRUB-particion-DOS](./images/arranque/grub-particion-DOS.png "GRUB-particion-DOS")
+![GRUB-particion-DOS](./images/grub-particion-DOS.png "GRUB-particion-DOS")
 
 Este sería un particionado ara multiboot con GRUB:
 
-![multiboot-DOS](./images/arranque/multiboot-DOS.png "multiboot-DOS")
+![multiboot-DOS](./images/multiboot-DOS.png "multiboot-DOS")
 
 #### Particiones GPT arranque UEFI
 El fichero `grubx64.efi` (que sustituye a `core.img`) se guarda en la partición
 ESP, y el resto del gestor en la partición para `/boot/grub`. Un posible 
 particionado es:
 
-![multiboot-GPT](./images/arranque/multiboot-GPT.png "multiboot-GPT")
+![multiboot-GPT](./images/multiboot-GPT.png "multiboot-GPT")
 
 #### Partición GPT arranque BIOS
 `boot.img` irá en el MBR del disco, pero el `core.img` no debe ir
@@ -572,7 +572,7 @@ y que vaya antes de la primera partición alineada a 1MiB.
 
 Un posible particionado:
 
-![multiboot-GPT_BIOS](./images/arranque/multiboot-GPT-BIOS.png "multiboot-GPT_BIOS")
+![multiboot-GPT_BIOS](./images/multiboot-GPT-BIOS.png "multiboot-GPT_BIOS")
 
 
 #### Arranque híbrido
@@ -580,7 +580,7 @@ Si quieres preparar el sistema para un paso de arranque BIOS a UEFI y que no
 duela mucho, puedes hacer lo siguiente: poner las 2 particiones de arranque,
 la BIOS Boot Partition y la ESP:
 
-![multiboot-GPT-hybrid](./images/arranque/multiboot-GPT-BIOS-UEFI.png "multiboot-GPT-hybrid")
+![multiboot-GPT-hybrid](./images/multiboot-GPT-BIOS-UEFI.png "multiboot-GPT-hybrid")
 
 ## hibernar y suspender
 Son "alternativas" a apagar el equipo. Su propósito es el mismo: conservar
