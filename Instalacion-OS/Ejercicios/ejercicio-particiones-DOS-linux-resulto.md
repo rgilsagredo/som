@@ -72,11 +72,11 @@ Finalmente, guardamos la tabla de particiones con el comando `w`.
 
 Si ha ido todo bien, debemos ver lo siguiente:
 
-![particiones](./Ej-part-DOS-images/partitions-list.PNG)
-![free-space](./Ej-part-DOS-images/free-space.PNG)
+![particiones](./images/partitions-list.PNG)
+![free-space](./images/free-space.PNG)
 
 ## Solución con sfdisk
 Los comandos serían los siguientes (ignorar los IDs que de cada disco
 serán diferentes):
 
-![sfdisk-solution](./Ej-part-DOS-images/sol-con-sfdisk.PNG)
+![sfdisk-solution](./images/sol-con-sfdisk.PNG)

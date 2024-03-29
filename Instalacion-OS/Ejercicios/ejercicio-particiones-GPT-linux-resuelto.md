@@ -1,7 +1,7 @@
 # Común a cualquier ejercicio
 Vamos a la carpeta `/tmp/` y creamos un "disco" de 100GiB:
 
-![crear-disco](./Ej-part-GPT-images/crear-disco.PNG)
+![crear-disco](./images/crear-disco.PNG)
 
 # Particionado GPT para arranque BIOS
 Crear 3 particiones, alineadas a 1MiB, consecutivas, de tamaños 32MiB,
@@ -22,7 +22,7 @@ por practicar, con una alineación de 4KiB (es la mínima recomendada).
 
 Ejecutamos los comandos:
 
-![particion-BIOS_BOOT](./Ej-part-GPT-images/crear-particion-BIOSBOOT.PNG)
+![particion-BIOS_BOOT](./images/crear-particion-BIOSBOOT.PNG)
 
 que lo que hace es: cambiar la alineación a 8 sectores (esto es porque queremos
 que la partición que contenga a core.img vaya entre la tabla GPT y la primera
@@ -44,7 +44,7 @@ la BIOS Boot Partition; puedo saber los códigos preguntando a sgdisk con
 ```console
 sgdisk -L
 ```
-![codigos-tipo-particion](./Ej-part-GPT-images/sgdisk-codigos.PNG)
+![codigos-tipo-particion](./images/sgdisk-codigos.PNG)
 
 finalmente decimos que queremos etiquetar este disco (de ahí el 0) con el label
 `BIOSBOOT`.
@@ -54,7 +54,7 @@ particiones del disco `0.disk`.
 
 Podemos comprobar que ha ido todo bien con `sgdisk -p 0.disk`
 
-![comprobación-particion-creada](./Ej-part-GPT-images/particion-BIOSBOOT-creada.PNG)
+![comprobación-particion-creada](./images/particion-BIOSBOOT-creada.PNG)
 
 Ojo que como hemos dicho que cambie la alineación, para las siguientes particiones
 tenemos que volver a ponerla a 2048.
@@ -64,36 +64,36 @@ código del tipo de partición para "Microsoft basic data" que es `0x0700`
 (las de linux no hace falta definir el código pues es el por defecto);
 podemos crearlas todas de una con:
 
-![crear-las-otras-particiones](./Ej-part-GPT-images/las-otras-particiones.PNG)
+![crear-las-otras-particiones](./images/las-otras-particiones.PNG)
 
 Y comprobamos:
 
-![particionado-ok](./Ej-part-GPT-images/particionado-ok.PNG)
+![particionado-ok](./images/particionado-ok.PNG)
 
 Ahora modificamos la partición "TRES" para que su tipo de partición sea
 "Linux swap" (código `0x8200`):
 
-![cambio-FS-particion-3](./Ej-part-GPT-images/cambio-FS-particion-3.PNG)
+![cambio-FS-particion-3](./images/cambio-FS-particion-3.PNG)
 
 Creamos la partición 5 que ocupe todo el resto del espacio:
 
-![particion-que-okupa-todo](./Ej-part-GPT-images/particion-5.PNG)
+![particion-que-okupa-todo](./images/particion-5.PNG)
 
 Y la borramos:
 
-![borrado-de-particion](./Ej-part-GPT-images/borramos-part-5.PNG)
+![borrado-de-particion](./images/borramos-part-5.PNG)
 
 Y cambiamos los ordenes de las particiones:
 
-![cambio-orden-entradas-en-tabla](./Ej-part-GPT-images/cambio-entradas-en-tabla.PNG)
+![cambio-orden-entradas-en-tabla](./images/cambio-entradas-en-tabla.PNG)
 
 ## Particionado GPT para arranque UEFI
 Hay que crear las mismas 3 particiones que antes, solo que ahora creamos una
 partición de tipo `ESP` de 100MiB alineada 1MiB para que contenga los
 bootloaders de diferntes OS:
 
-![particionado-1.disk](./Ej-part-GPT-images/particionado-disco-1-disk.PNG)
-![particionado-1.disk](./Ej-part-GPT-images/particionado-disco-1-disk-2.PNG)
+![particionado-1.disk](./images/particionado-disco-1-disk.PNG)
+![particionado-1.disk](./images/particionado-disco-1-disk-2.PNG)
 
 ## PArticionado arranque híbirdo
 Simplemente es hacer las 2 cosas anteriores de una:
