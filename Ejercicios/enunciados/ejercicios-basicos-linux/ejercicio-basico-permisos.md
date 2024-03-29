@@ -142,6 +142,102 @@ chmod 01757 /srv/ftp
 ```
 
 ## 9
-PDTE
+Un directorio para que alumnos puedan subir ficheros.
+No se puede borrar lo de otros
+No se puede copiar lo de otros
+
+Vamos a plantear esto un poco mejor. El admin del sistema provee a una clase
+de un espacio donde los estudiantes pueden subir sus trabajos, y los profesores 
+corregirlos. Obviamante, queremos que los estudiantes solo tengan control sobre
+sus ficheros y no puedan eliminar ni copiar los de otros. El profesor tampoco
+puede eliminar los ficheros, pero puede corregirlos (modificarlos).
+
+Para hacer esto, primero creamos usuarios y grupos:
+
+```bash
+sudo adduser --no-create-home jefatura
+sudo adduser --no-create-home profe
+sudo adduser --no-create-home alumno1
+sudo adduser --no-create-home alumno2
+sudo addgroup profesores
+sudo addgroup alumnos
+sudo usermod --groups profesores --append profe
+sudo usermod --groups alumnos --append alumno1
+sudo usermod --groups alumnos --append alumno2
+```
+
+Estos comandos nos crean 4 usuarios, el admin que va a crear las cosas,
+el profesor y 2 alumnos. También creamos un grupo para profesores y para
+alumnos, y metemos a los usuarios en esos grupos.
+
+Con el usuario jefatura creamos la carpeta compartida:
+```bash
+su jefatura
+mkdir /tmp/clase
+```
+Veremos que los permisos de ese directorio están en 775 siendo usuario y grupo
+propietario `jefatura`. Con esto, ni alumnos ni profesores podrán crear cosas
+en el directorio. Para que puedan, tenemos que habiliat los permisos de 
+`w` en el directorio con (el usuario jefatura)
+
+```bash
+chmod 777 /tmp/clase
+```
+
+Pero con esto los usuarios pueden tocar los ficheros de otros (borrar, copiar,
+modificar). Para que solo los propietarios de los ficheros puedan tocar solo
+lo suyo, activamos el stickybit en el directorio (con el usuario jefatura)
+
+```bash
+chmod 01777 /tmp/clase
+```
+
+Esto evita que los usuarios puedan borrar lo que no les pertenece (el 
+propiatario del directorio sí podrá borrar cosas de cualquiera).
+
+Pero se pueden seguir copiando ficheros. La clave para que no se puedan copiar
+coas es que si se puede leer, se puede copiar. Por tanto, hay que quitar los
+permisos de `r` para `others` en el directorio:
+
+```bash
+chmod 01773 /tmp/clase
+```
+
+Y eso hace que los `other` solo puedan ver sus cosas, en particular no
+pueden ver lo de los demás. Pero esto plantea un problema, es que ahora el 
+profe no puede ver lo de los alumnos. Pero la solución es fácil, agregamos al
+profe al grupo de alumnos, y nos aseguramos que los usuarios del grupo
+alumnos venga con el permiso de `w` por defecto en los ficheros
+
+comprobar:
+- alumnos pueden crear modificar y borrar cosas unicamente si son propietarios
+- profesores pueden ver y modificar todo, no borrar nada
+
+los alumnos pueden crear ficheros
+los laumnos pueden modificar sus ficheros
+los alumnos no pueden modificar los ficheros de otros
+nadie puede borrar nada que no sea suyo
+!! el profesor no puede modificar trabajos --> cambiarle a grupo jefatura
+!! los alumnos pueden cat los ficheros de otros --> cambiar permisos de grupo alumnos
+!! los alumnos pueden copiar trabajos de otros alumnos
+
+Creo que la solucion va a ser: profe a grupo jefatura, quitar al grupo alumnos
+permisos.
+
+Creo que lo tengo así:
+añadir a profesor al grupo de jefatura, para que pueda ver y editar cosas
+modificar /etc/bash.bashrc añadiendo
+
+```bash
+if [ "$(id -nG)" = "alumnos" ]; then
+    umask calcular_mask
+fi
+```
+
+esto hace que para el grupo alumnos se ponga una máscara automática
+Con ello, calcular la máscara para que los permisos de ficheros sea 700 o
+algo así, la cosa es que no puedan tocar cosas del grupo pero si las suyas.
+Y eso debería ser
+
 ## 10
 PDTE
