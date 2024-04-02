@@ -176,3 +176,163 @@ podemos hacer `fg %n` donde n es el número del trabajo (que me ha dicho jobs)
 para traerla de nuevo a primer plano y que siga ejecutándose.
 
 Para llevar una orden a 2º plano, hacemos `bg %n`, o como antes, `orden &`
+
+
+## Privilegios 
+Los procesos pueden tener 2 niveles de privilegio: kernel y usuario.
+La diferencia principal es el acceso a recursos del sistema y las acciones
+que puedan realizar.
+
+Los procesos privilegiados pueden realizar tareas que afecten el correcto
+funcionamiento del OS: crear/borrar usuarios, instalar software, modificar
+ficheros del OS...
+
+Los procesos de usuario están restringidos a los privilegios que tenga el 
+usuario, y están limitados también por las restricciones que pueda imponer
+el OS
+
+Para que usuarios no root (o no admin) puedan lanzar procesos privilegiados,
+hay 2 estrategias:
+
+### setuid
+Como recordatorio, setuid es un permiso especial que se puede conceder a 
+ficheros para que se ejecuten con los permisos del propietario del fichero
+
+Pordemos ver con 
+
+```bash
+stat $(which su)
+```
+
+que el programa `su` lo tiene activado y el propietario es root, es decir,
+cualquier usuario que use este programa lo hará como si fuese root, se 
+puede replicar esta estrategia con cualquier otro programa
+
+Otra estrategia es usar el propio comando `su`, que permite ejecutar 
+cualquier otro programa. Pero requiere saber la password del admin.
+
+Una variante de `su` es `sudo`, que es más configurable: puedes pedir passwd
+de user, admin o ninguna y puedes restringir para cada usuario qué programas
+puede lanzar como privilegiado
+
+La estrategia de su/sudo tiene el problema de que se viola (en ppio) el ppio de 
+minimo privilegio, que es que un usuario debe tener los privilegios mínimos
+para hacer lo que tiene que hacer
+
+### capacities 
+No me voy a meter mucho, pero esencialmente consiste en que en lugar de dar
+omnipotencia (actuar como root) se dividen los privilegios en miniprivielgios,
+y solo se conceden los miniprivilegios necesarios al proceso para que haga
+loq ue necesite
+
+### sudo
+Ya que hemos visto y usado bastante sudo, lo vemos un poco más en profundidad.
+Está pensado para usarse puntualmente: `sudo comando` pero recuerda la
+password durante 5 minutos (para que no se tenga que estar pidiendo la
+pass continuamete que puede ser toedioso)
+
+Por un lado está bien que no puede abrir una sesión interactiva de una shell
+como root, pero por otro lado i te pillan la pass de un usuario sudoer, 
+a efectos te han robado al admin.
+
+La config de sudo está en 
+
+```bash
+/etc/sudoers
+/etc/sudoers.d/
+```
+
+sudoers es el fichero principal pero cualquier fichero que esté en la carpeta
+sudoers.d también se considera de config; es útil para distribuir configs
+específicas y sobre tod para no tocar ficheros que pueden romper cosas
+
+Para tocar estos ficheros puedes hacerlo conun editor de textos pero mejor usar
+el programa diseñado para ello que es `visudo`:
+
+```bash
+visudo # esto abre /etc/sudoers
+visudo -f /etc/sudoers.d/fichero-de-config # esto abre un fichero concreto 
+```
+
+Escribir en estos ficheros requiere saber cómo se debe escribir en ellos.
+
+#### alias
+son nombres que damos a conjuntos de usuarios/grupos, máquinas u órdenes.
+
+##### Cmnd_Alias
+Define alias para un comando o grupo de comandos, por ejemplo:
+
+```bash
+Cmnd_Alias BACKUP_CMDS = /bin/tar, /usr/bin/rsync, /bin/cp
+```
+
+define esos comandos bajo el alias BACKUP_CMND.
+
+Se puede usar también una expresión tipo `Cmnd_Alias NETEXEC = /sbin/if* eth*`
+que permite usar un comando que empiece por if pero solo si luego hay
+un argumentno que empiece por eth
+
+Se pueden también usar alias en alias tipo: 
+
+```bash
+Cmnd_Alias IFUPDOWN = /sbin/if* eth*
+Cmnd_Alias NETEXEC = IFUPDOWN, /sbin/route
+```
+Y se pueden denegar comandos que no queremos que se ejecuten:
+
+```bash
+Cmnd_Alias IFUPDOWN = /sbin/if*, !/sbin/ifconfig
+```
+
+Exite un alias predefinido, `ALL`, que es "ejecutar cualquier cosa"
+
+##### User_alias
+Define grupos de usuarios y grupos:
+
+```bash
+User_Alias COLEGUILLAS = pepe, paco, %amigospepe, %amigospaco
+User_Alias CASTA = ALL, !apestado, !%parias
+```
+
+el % quiere decir que estoy incluyendo un grupo, ! y ALL como antes
+
+##### Host_alias
+define las maquinas que podrán ejecutar `sudo`
+```bash
+Host_Alias LAN = 172.22.0.0/16, 192.168.0.0/255.255.255.0, 192.168.1.1
+```
+ALL también existe aquí
+
+#### Reglas de acceso
+Es cómo definir qué puede hacer cada usuario, el formato es
+
+```bash
+<usuario> <maquina> = [(<poderdante>)] <comando1>[, <comando2>, ...]
+```
+- usuario es un usuario, grupo o alias. Es a quien se dan los privilegios
+- máquina es desde donde se puede hacer el sudo
+- poderante es el usuario del que se toman los privilegios. Si no se dice, es 
+    root
+- lo último son los comandos o alias
+
+Ejemplo:
+```bash
+COLEGUILLAS ALL = (root) NOPASSWD: NETEXEC
+```
+El palabro NOPASSWD es para que no se pida password
+
+Por ejemplo esto:
+```bash
+# /etc/sudoers.d/updaters
+# Command alias
+Cmnd_Alias APT_UPDATE = /usr/bin/apt update
+Cmnd_Alias APT_UPGRADE = /usr/bin/apt upgrade
+Cmnd_Alias APT_UPDATE_SYS = APT_UPDATE, APT_UPGRADE
+
+# User alias
+User_Alias SYS_UPDATERS = raul
+
+# Access rule
+SYS_UPDATERS ALL = (root) NOPASSWD: APT_UPDATE_SYS
+```
+Hace que podamos ejecutar el sistema sin que nos pida password
