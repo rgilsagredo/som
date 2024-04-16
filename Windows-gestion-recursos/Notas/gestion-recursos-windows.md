@@ -110,7 +110,76 @@ en la barra de búsqueda `startup apps`:
 Y habilitando con el botoncito de al lado
 
 ## gestion de discos
-ver: https://sio2sio2.github.io/doc-linux/guias/0222.som/09.admwin/index.html#monitorizacion
-## mejor gestion de la memoria
-libro, 9.1.4
+Para la gestión específica de los discos duros, debemos buscar, en la barra
+de búsqueda de windows, `diskmgmt`, y nos llevará a la siguiente interfaz:
 
+![diskmgmt](./images/diskmgmt.jpg "diskmgmt")
+
+Ahí tenemos toda la información que necesitamos sobre nuestros disposivitos de
+almacenamiento (discos, particiones, algunas características extra como
+las reservadas del sistema, la activa...)
+
+Podemos hacer también cualquier gestión que necesitemos de nuestros discos 
+desde esta misma interfaz. Basta clickear con el botón derecho o bien en
+el listado de arriba o en la parte gráfica (ver que al seleccionar cualquiera
+de ambas, se resalta la otra):
+
+![diskmgmt2](./images/diskmgmt2.jpg "diskmgmt2")
+
+Entre las opciones más comunes son formatear (para alojar un nuevo FS)
+y aumentar/reducir el volumen para dar espacio de disco
+en caso de que lo necesitemos; así como borrar el volumen (partición)
+
+Por cierto, se verá que aquellas particiones que son esenciales para el sistema,
+la propia interfaz gráfica no nos permite "romperlas"
+
+Las opciones de gestión de disco interesantes aparecen cuando, pulsando el
+botón derecho, vamos a "propiedades", veremos algo así:
+
+![disk-prop](./images/disk-prop.jpg "pdisk-prop")
+
+En la tab de general tenemos un info del almacenamiento, FS, y la utilidad
+de "limpieza", que sirve para que el OS detecte automáticamente ficheros
+innecesarios que puedan estar consumiendo espacio en disco
+
+En la pestaña de herramientas tenemos 2 utilidades: la de búsqueda de errores
+en el disco duro y la dde optimización del espacio. Mientras que la de búsqueda
+de errores la debemos ejecutar manualmente cunado sospechemos de fallo de disco,
+la de optmización normalmente está configurada para que se ejecute periódicamente;
+podemos verlo y configurarlo pulsando el botón correspondiente y nos saltará 
+otra ventana
+
+En la tab de seguridad tenemos información de los usuarios/grupos y los permisos
+que tienen sobre el disco. Toda la gestión la haremos desde ahí.
+
+Es especialmente interesante, sobre todo para equipos que van a ser compartidos
+por varias personas, la opción de "quota":
+
+![quota](./images/quota.jpg "quota")
+
+En esta opción se nor permite configurar si queremos o no que se tenga en 
+centa el espacio usado por cada usuario del disco duro, pudiendo incluso
+bloquear que los usuarios puedan ocupar más espacio del que les es
+permitido. Para ver qué usuarios se están comiendo el espacio de disco,
+podemos dar al botón de quota entries, que nos llevará a un log de
+los "excesos" de quota de cada usuario. También, desde ese mismo panel
+podemos especificar reglas concretas para un usuario (por ejemplo, que
+no le afecte el límite de quota, o que tenga un límite diferente al
+por defecto de volumen), basta pulsar en las propiedades (botón derecho
+sobre la entrada del usuario que queremos gestionar)
+
+
+## Gestion de la memoria
+Podemos gestionar mejor la memoria del sistema yendo a "mi PC" -> click dercho,
+propiedades, y ahí nos abrirá los "Syustem Settings". Ahí tendremos que buscar
+la opción de "propiedades avanzadas", y nos llevará a la siguiente ventana:
+
+![advnced-sys-prop](./images/advance-sys-prop.jpg "advnced-sys-prop")
+
+Pulsando en el botón de performance, podemos configurar cómo quremos
+que Windows use memoria sobre todo en cosas gráficas. Obviamente,
+la elección que se haga dependerá completamente del uso que se quiera dar al
+equipo. En esa misma venta, es interesante también ver la pestaña de
+avanzado, donde podemos indicarle a Windows si queremos que aloje más 
+recursos para los procesos de usuario o para los procesos de segundo plano;
+de nuevo, la elección dependerá del uso que se está dando al equipo
