@@ -141,7 +141,7 @@ hay que activar el permiso espacial `stickybit` en el directorio:
 chmod 01757 /srv/ftp
 ```
 
-## 9
+<!-- ## 9
 Un directorio para que alumnos puedan subir ficheros.
 No se puede borrar lo de otros
 No se puede copiar lo de otros
@@ -217,8 +217,8 @@ los alumnos pueden crear ficheros
 los laumnos pueden modificar sus ficheros
 los alumnos no pueden modificar los ficheros de otros
 nadie puede borrar nada que no sea suyo
-!! el profesor no puede modificar trabajos --> cambiarle a grupo jefatura
-!! los alumnos pueden cat los ficheros de otros --> cambiar permisos de grupo alumnos
+!! el profesor no puede modificar trabajos -> cambiarle a grupo jefatura
+!! los alumnos pueden cat los ficheros de otros -> cambiar permisos de grupo alumnos
 !! los alumnos pueden copiar trabajos de otros alumnos
 
 Creo que la solucion va a ser: profe a grupo jefatura, quitar al grupo alumnos
@@ -237,7 +237,7 @@ fi
 esto hace que para el grupo alumnos se ponga una máscara automática
 Con ello, calcular la máscara para que los permisos de ficheros sea 700 o
 algo así, la cosa es que no puedan tocar cosas del grupo pero si las suyas.
-Y eso debería ser
+Y eso debería ser -->
 
 ## 10
 PDTE
